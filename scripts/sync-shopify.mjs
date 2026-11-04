@@ -45,10 +45,36 @@ const query = /* GraphQL */ `
 					width
 					height
 				}
+				products(first: 10) {
+					nodes {
+						availableForSale
+						featuredImage {
+							url
+							altText
+							width
+							height
+						}
+					}
+				}
 			}
 		}
 	}
 `;
+
+// Collections without an image of their own use a product photo, preferring one that's in
+// stock and not already on another card, so neighbouring cards in the grid differ.
+const usedImages = new Set();
+function coverImage(products) {
+	const withImage = products.filter((product) => product.featuredImage);
+	const fresh = withImage.filter((product) => !usedImages.has(product.featuredImage.url));
+	const pick =
+		fresh.find((product) => product.availableForSale) ??
+		withImage.find((product) => product.availableForSale) ??
+		fresh[0] ??
+		withImage[0];
+	if (pick) usedImages.add(pick.featuredImage.url);
+	return pick?.featuredImage ?? null;
+}
 
 async function request(variables) {
 	const headers = { 'Content-Type': 'application/json' };
@@ -77,9 +103,16 @@ try {
 		cursor = data.products.pageInfo.hasNextPage ? data.products.pageInfo.endCursor : null;
 	} while (cursor);
 
+	for (const { image } of collections) if (image) usedImages.add(image.url);
+	collections = collections.map(({ handle, title, image, products: members }) => ({
+		handle,
+		title,
+		image: image ?? coverImage(members.nodes),
+	}));
+
 	// Matches ALL_PRODUCTS in src/lib/shopify/catalog.ts, so pickers and the collection grid can use it.
 	if (!collections.some((collection) => collection.handle === 'all')) {
-		collections.unshift({ handle: 'all', title: 'All products', image: null });
+		collections.unshift({ handle: 'all', title: 'All products', image: coverImage(products) });
 	}
 
 	write('src/data/shopify/products.json', products);
