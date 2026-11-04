@@ -1,0 +1,50 @@
+---
+import { getCollection } from 'astro:content';
+import Base from '../../layouts/Base.astro';
+import BlockRenderer from '../../components/BlockRenderer.astro';
+import ProductCard from '../../components/shop/ProductCard.astro';
+import EditorNote from '../../components/EditorNote.astro';
+import { getAllCollections } from '../../lib/shopify/catalog';
+import { markdown } from '../../lib/markdown';
+
+export async function getStaticPaths() {
+	const [collections, intros] = await Promise.all([getAllCollections(), getCollection('collection-intros')]);
+	return collections.map((collection) => ({
+		params: { handle: collection.handle },
+		props: { collection, intro: intros.find((entry) => entry.data.collection === collection.handle) },
+	}));
+}
+
+const { collection, intro } = Astro.props;
+const heading = intro?.data.heading || collection.title;
+---
+<Base title={heading} description={collection.description}>
+	<section class="collection-hero">
+		<div>
+			{intro ? <h1 data-editable="text" data-prop="heading">{heading}</h1> : <h1>{heading}</h1>}
+			{intro?.data.intro && <div class="prose" data-editable="text" data-type="block" data-prop="intro" set:html={markdown(intro.data.intro)} />}
+		</div>
+		{intro?.data.image && (
+			<img src={intro.data.image} alt={intro.data.image_alt ?? ''} data-editable="image" data-prop-src="image" data-prop-alt="image_alt" />
+		)}
+	</section>
+	<section class="section">
+		<div class="shopify-managed">
+			<ul class="product-grid">
+				{collection.products.nodes.map((product) => (
+					<li><ProductCard product={product} /></li>
+				))}
+			</ul>
+			<EditorNote note="Which products appear, and their order, comes from this collection in Shopify admin." />
+		</div>
+	</section>
+	{intro && (
+		<div class="blocks" data-editable="array" data-prop="content_blocks" data-component-key="_type">
+			{intro.data.content_blocks.map((block) => (
+				<div data-editable="array-item" data-component={block._type}>
+					<BlockRenderer {...block} />
+				</div>
+			))}
+		</div>
+	)}
+</Base>

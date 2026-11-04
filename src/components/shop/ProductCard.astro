@@ -1,0 +1,19 @@
+---
+import type { ProductCard } from '../../lib/shopify/types';
+import { shopifyImageAttrs } from '../../lib/shopify/image';
+import { formatMoney } from '../../lib/shopify/money';
+
+interface Props {
+	product: ProductCard;
+}
+const { product } = Astro.props;
+---
+<a class="product-card" href={`/products/${product.handle}/`}>
+	{product.featuredImage && (
+		<img {...shopifyImageAttrs(product.featuredImage, '(min-width: 60rem) 22vw, 45vw', 640)} loading="lazy" />
+	)}
+	<span class="product-card-title">{product.title}</span>
+	<span class="product-card-price">
+		{product.availableForSale ? `From ${formatMoney(product.priceRange.minVariantPrice)}` : 'Sold out'}
+	</span>
+</a>

@@ -1,0 +1,32 @@
+---
+import type { BlockProps } from '../../content.config';
+import type { ShopifyImage } from '../../lib/shopify/types';
+import { shopifyImageAttrs } from '../../lib/shopify/image';
+import catalog from '../../data/shopify/collections.json';
+
+type Props = BlockProps<'collection_grid'>;
+
+interface CollectionSummary {
+	handle: string;
+	title: string;
+	image: ShopifyImage | null;
+}
+
+const { heading, collections } = Astro.props;
+const cards = (collections ?? [])
+	.map((handle) => (catalog as CollectionSummary[]).find((collection) => collection.handle === handle))
+	.filter((collection): collection is CollectionSummary => Boolean(collection));
+---
+<section class="section">
+	{heading && <h2 data-editable="text" data-prop="heading">{heading}</h2>}
+	<ul class="collection-grid">
+		{cards.map((collection) => (
+			<li>
+				<a class="collection-card" href={`/collections/${collection.handle}/`}>
+					{collection.image && <img {...shopifyImageAttrs(collection.image, '(min-width: 60rem) 30vw, 90vw', 960)} loading="lazy" />}
+					<span>{collection.title}</span>
+				</a>
+			</li>
+		))}
+	</ul>
+</section>

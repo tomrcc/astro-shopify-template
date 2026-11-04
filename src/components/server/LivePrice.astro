@@ -1,0 +1,31 @@
+---
+import PriceView from '../shop/PriceView.astro';
+import { shopify } from '../../lib/shopify/client';
+import { LIVE_VARIANTS } from '../../lib/shopify/queries';
+import type { LiveVariant } from '../../lib/shopify/types';
+
+interface Props {
+	handle: string;
+	built: LiveVariant;
+	soldOutLabel: string;
+}
+const { handle, built, soldOutLabel } = Astro.props;
+
+// Shoppers share this response through the CDN. It goes stale after a minute and
+// refreshes in the background, so Shopify sees at most about one request a minute per product.
+Astro.response.headers.set('Cache-Control', 'public, max-age=0, must-revalidate');
+Astro.response.headers.set('Netlify-CDN-Cache-Control', 'public, durable, s-maxage=60, stale-while-revalidate=600');
+Astro.response.headers.set('Netlify-Cache-Tag', `product-${handle}`);
+
+let variants: LiveVariant[] = [];
+try {
+	const data = await shopify<{ product: { variants: { nodes: LiveVariant[] } } | null }>(LIVE_VARIANTS, { handle });
+	variants = data.product?.variants.nodes ?? [];
+} catch (error) {
+	console.error(`LivePrice: ${(error as Error).message}`);
+}
+// Falls back to the price from the build if Shopify can't be reached.
+const variant = variants.find((item) => item.id === built.id) ?? built;
+---
+<PriceView price={variant.price} compareAtPrice={variant.compareAtPrice} availableForSale={variant.availableForSale} soldOutLabel={soldOutLabel} />
+{variants.length > 0 && <script type="application/json" data-live-variants set:html={JSON.stringify(variants)} />}

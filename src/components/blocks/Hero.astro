@@ -1,0 +1,17 @@
+---
+import type { BlockProps } from '../../content.config';
+
+type Props = BlockProps<'hero'>;
+
+const { heading, subheading, image, image_alt, button } = Astro.props;
+---
+<section class="hero">
+	<div class="hero-copy">
+		<h1 data-editable="text" data-prop="heading">{heading}</h1>
+		{subheading && <p class="hero-sub" data-editable="text" data-prop="subheading">{subheading}</p>}
+		{button?.label?.trim() && (
+			<a class="button" href={button.url || '/'} data-editable="text" data-prop="button.label">{button.label}</a>
+		)}
+	</div>
+	{image && <img class="hero-image" src={image} alt={image_alt ?? ''} data-editable="image" data-prop-src="image" data-prop-alt="image_alt" />}
+</section>

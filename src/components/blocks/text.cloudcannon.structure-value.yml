@@ -1,0 +1,29 @@
+label: Text
+icon: article
+picker_preview:
+  text:
+    - Text
+  icon:
+    - article
+preview:
+  text:
+    - key: heading
+    - Text
+  icon:
+    - article
+value:
+  _type: text
+  heading:
+  content: Write something here.
+_inputs:
+  heading:
+    type: text
+  content:
+    type: markdown
+    options:
+      bold: true
+      italic: true
+      link: true
+      bulletedlist: true
+      numberedlist: true
+      format: p h3

@@ -1,0 +1,8 @@
+{
+  "enabled": true,
+  "text": "Free shipping on orders over $100",
+  "link": {
+    "label": "See the winter edit",
+    "url": "/winter/"
+  }
+}

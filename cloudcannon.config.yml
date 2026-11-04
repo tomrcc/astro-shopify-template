@@ -1,0 +1,270 @@
+timezone: Pacific/Auckland
+
+paths:
+  static: public
+  uploads: public/images
+
+collections_config:
+  pages:
+    path: src/content/pages
+    url: /[slug]/
+    icon: wysiwyg
+    _enabled_editors:
+      - visual
+      - content
+      - data
+    schemas:
+      default:
+        path: .cloudcannon/schemas/page.md
+        name: Text page
+        icon: article
+      page_builder:
+        path: .cloudcannon/schemas/page-builder.md
+        name: Page builder
+        icon: dashboard
+        new_preview_url: /about/
+    add_options:
+      - name: Page builder
+        schema: page_builder
+        icon: dashboard
+      - name: Text page
+        schema: default
+        icon: article
+        editor: content
+  product_stories:
+    path: src/content/product-stories
+    name: Product stories
+    description: Editorial content shown around a Shopify product.
+    url: /products/{product}/
+    icon: local_mall
+    _enabled_editors:
+      - visual
+      - data
+    create:
+      path: '[relative_base_path]/{product}.[ext]'
+    schemas:
+      default:
+        path: .cloudcannon/schemas/product-story.md
+        name: Product story
+        icon: local_mall
+    add_options:
+      - name: Product story
+        schema: default
+        icon: local_mall
+        editor: data
+    preview:
+      text:
+        - key: product
+    _inputs:
+      product:
+        type: select
+        comment: The Shopify product this story appears on. Run the product sync to list new products.
+        options:
+          values: data.shopify_products
+          value_key: handle
+          preview:
+            text:
+              - key: title
+            image:
+              - key: featuredImage.url
+      tagline:
+        type: textarea
+        comment: Shown under the product title.
+  collection_intros:
+    path: src/content/collection-intros
+    name: Collection intros
+    description: Editorial content shown around a Shopify collection.
+    url: /collections/{collection}/
+    icon: category
+    _enabled_editors:
+      - visual
+      - data
+    create:
+      path: '[relative_base_path]/{collection}.[ext]'
+    schemas:
+      default:
+        path: .cloudcannon/schemas/collection-intro.md
+        name: Collection intro
+        icon: category
+    add_options:
+      - name: Collection intro
+        schema: default
+        icon: category
+        editor: data
+    preview:
+      text:
+        - key: heading
+        - key: collection
+      subtext:
+        - key: collection
+      image:
+        - key: image
+    _inputs:
+      collection:
+        type: select
+        comment: The Shopify collection this intro appears on.
+        options:
+          values: data.shopify_collections
+          value_key: handle
+          preview:
+            text:
+              - key: title
+            image:
+              - key: image.url
+      heading:
+        type: text
+      intro:
+        type: markdown
+        options:
+          bold: true
+          italic: true
+          link: true
+      image:
+        type: image
+      image_alt:
+        type: text
+        label: Image description
+  data:
+    path: src/data
+    name: Site settings
+    icon: settings
+    glob:
+      - '*.json'
+    disable_url: true
+    disable_add: true
+    disable_file_actions: true
+    _enabled_editors:
+      - data
+
+collection_groups:
+  - heading: Content
+    collections:
+      - pages
+  - heading: Shop
+    collections:
+      - product_stories
+      - collection_intros
+  - heading: Settings
+    collections:
+      - data
+
+data_config:
+  site:
+    path: src/data/site.json
+  announcement:
+    path: src/data/announcement.json
+  shop:
+    path: src/data/shop.json
+  shopify_products:
+    path: src/data/shopify/products.json
+  shopify_collections:
+    path: src/data/shopify/collections.json
+
+_editables:
+  content:
+    bold: true
+    italic: true
+    link: true
+    bulletedlist: true
+    numberedlist: true
+    blockquote: true
+    format: p h2 h3
+
+_inputs:
+  _schema:
+    hidden: true
+  title:
+    type: text
+  description:
+    type: textarea
+    comment: Used in search results and link previews.
+  content_blocks:
+    type: array
+    label: Sections
+    options:
+      structures:
+        values_from_glob:
+          - /src/components/blocks/*.cloudcannon.structure-value.yml
+
+_structures:
+  links:
+    values:
+      - label: Link
+        icon: link
+        picker_preview:
+          text:
+            - Link
+          icon:
+            - link
+        preview:
+          text:
+            - key: label
+            - Link
+          subtext:
+            - key: url
+          icon:
+            - link
+        value:
+          label: New link
+          url: /
+        _inputs:
+          label:
+            type: text
+          url:
+            type: url
+
+
+file_config:
+  - glob: src/data/site.json
+    _inputs:
+      title:
+        type: text
+        label: Store name
+      description:
+        type: textarea
+        comment: The default description for search results and link previews.
+      nav:
+        type: array
+        label: Navigation
+        options:
+          structures: _structures.links
+      footer_text:
+        type: textarea
+      footer_links:
+        type: array
+        options:
+          structures: _structures.links
+  - glob: src/data/announcement.json
+    _inputs:
+      enabled:
+        type: switch
+        label: Show the announcement bar
+      text:
+        type: text
+      link:
+        type: object
+        options:
+          preview:
+            icon: link
+      link.label:
+        type: text
+        comment: Leave empty to hide the link.
+      link.url:
+        type: url
+  - glob: src/data/shop.json
+    _inputs:
+      add_to_cart_label:
+        type: text
+      sold_out_label:
+        type: text
+      cart_heading:
+        type: text
+      cart_empty:
+        type: text
+        label: Empty cart message
+      checkout_label:
+        type: text
+        label: Checkout button
+      shipping_note:
+        type: textarea
+        comment: Shown above the checkout button.

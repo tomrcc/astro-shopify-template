@@ -1,0 +1,18 @@
+---
+import type { BlockProps } from '../../content.config';
+
+type Props = BlockProps<'testimonial'>;
+
+const { quote, author, role } = Astro.props;
+---
+<section class="section testimonial">
+	<blockquote>
+		{quote && <p data-editable="text" data-prop="quote">{quote}</p>}
+		{author && (
+			<footer>
+				<cite data-editable="text" data-prop="author">{author}</cite>
+				{role && <span data-editable="text" data-prop="role">{role}</span>}
+			</footer>
+		)}
+	</blockquote>
+</section>

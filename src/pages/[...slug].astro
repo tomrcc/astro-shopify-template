@@ -1,0 +1,35 @@
+---
+import { getCollection, render } from 'astro:content';
+import Base from '../layouts/Base.astro';
+import BlockRenderer from '../components/BlockRenderer.astro';
+
+export async function getStaticPaths() {
+	const pages = await getCollection('pages');
+	return pages.map((page) => ({
+		params: { slug: page.id === 'index' ? undefined : page.id },
+		props: { page },
+	}));
+}
+
+const { page } = Astro.props;
+const { data } = page;
+const { Content } = await render(page);
+---
+<Base title={data.title} description={data.description}>
+	{'content_blocks' in data ? (
+		<div class="blocks" data-editable="array" data-prop="content_blocks" data-component-key="_type">
+			{data.content_blocks.map((block) => (
+				<div data-editable="array-item" data-component={block._type}>
+					<BlockRenderer {...block} />
+				</div>
+			))}
+		</div>
+	) : (
+		<article class="section page">
+			<h1 data-editable="text" data-prop="title">{data.title}</h1>
+			<div class="prose" data-editable="text" data-prop="@content">
+				<Content />
+			</div>
+		</article>
+	)}
+</Base>

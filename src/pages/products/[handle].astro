@@ -1,0 +1,63 @@
+---
+import { getCollection } from 'astro:content';
+import Base from '../../layouts/Base.astro';
+import BlockRenderer from '../../components/BlockRenderer.astro';
+import ProductForm from '../../components/shop/ProductForm.astro';
+import EditorNote from '../../components/EditorNote.astro';
+import { getAllProducts } from '../../lib/shopify/catalog';
+import { shopifyImageAttrs } from '../../lib/shopify/image';
+
+export async function getStaticPaths() {
+	const [products, stories] = await Promise.all([getAllProducts(), getCollection('product-stories')]);
+	return products.map((product) => ({
+		params: { handle: product.handle },
+		props: { product, story: stories.find((entry) => entry.data.product === product.handle) },
+	}));
+}
+
+const { product, story } = Astro.props;
+const images = product.images.nodes;
+---
+<Base title={product.seo.title || product.title} description={product.seo.description} image={product.featuredImage?.url}>
+	<section class="product">
+		<div class="product-gallery">
+			{images.map((image, index) => (
+				<img
+					{...shopifyImageAttrs(image, index === 0 ? '(min-width: 60rem) 50vw, 100vw' : '(min-width: 60rem) 25vw, 50vw')}
+					alt={image.altText ?? (index === 0 ? product.title : '')}
+					loading={index === 0 ? 'eager' : 'lazy'}
+					fetchpriority={index === 0 ? 'high' : undefined}
+					data-gallery-image={index}
+				/>
+			))}
+		</div>
+		<div class="product-info">
+			<div class="shopify-managed">
+				<h1>{product.title}</h1>
+				<EditorNote note="The title, photos, price, options and description come from Shopify. Change them in Shopify admin." />
+			</div>
+			{story?.data.tagline && <p class="product-tagline" data-editable="text" data-prop="tagline">{story.data.tagline}</p>}
+			<ProductForm product={product} />
+			<div class="prose product-description" set:html={product.descriptionHtml} />
+		</div>
+	</section>
+	{story && (
+		<div class="blocks" data-editable="array" data-prop="content_blocks" data-component-key="_type">
+			{story.data.content_blocks.map((block) => (
+				<div data-editable="array-item" data-component={block._type}>
+					<BlockRenderer {...block} />
+				</div>
+			))}
+		</div>
+	)}
+</Base>
+
+<script>
+	// Shows the chosen variant's photo first.
+	document.addEventListener('product:image', (event) => {
+		const url = (event as CustomEvent<string>).detail.split('?')[0];
+		const images = [...document.querySelectorAll<HTMLImageElement>('[data-gallery-image]')];
+		const match = images.find((image) => image.src.split('?')[0] === url);
+		if (match && match !== images[0]) images[0].before(match);
+	});
+</script>

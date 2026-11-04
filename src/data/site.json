@@ -1,0 +1,16 @@
+{
+  "title": "Field & Thread",
+  "description": "Everyday clothing made to be worn hard and kept for years.",
+  "nav": [
+    { "label": "Shop all", "url": "/collections/featured/" },
+    { "label": "Tops", "url": "/collections/tops/" },
+    { "label": "Accessories", "url": "/collections/accessories/" },
+    { "label": "Our story", "url": "/about/" }
+  ],
+  "footer_text": "Field & Thread is a demo store. Products come from Shopify; everything else is edited in CloudCannon.",
+  "footer_links": [
+    { "label": "About", "url": "/about/" },
+    { "label": "Care guide", "url": "/care-guide/" },
+    { "label": "Winter campaign", "url": "/winter/" }
+  ]
+}

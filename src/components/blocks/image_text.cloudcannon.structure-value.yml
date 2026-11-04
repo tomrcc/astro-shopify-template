@@ -1,0 +1,62 @@
+label: Image and text
+icon: vertical_split
+picker_preview:
+  text:
+    - Image and text
+  icon:
+    - vertical_split
+preview:
+  text:
+    - key: heading
+    - Image and text
+  icon:
+    - vertical_split
+  image:
+    - key: image
+value:
+  _type: image_text
+  heading: A heading
+  content: Some text about this.
+  image:
+  image_alt:
+  image_side: left
+  button:
+    label:
+    url:
+_inputs:
+  heading:
+    type: text
+  content:
+    type: markdown
+    options:
+      bold: true
+      italic: true
+      link: true
+      bulletedlist: true
+  image:
+    type: image
+  image_alt:
+    type: text
+    label: Image description
+  image_side:
+    type: select
+    options:
+      values:
+        - id: left
+          name: Image on the left
+        - id: right
+          name: Image on the right
+      value_key: id
+      preview:
+        text:
+          - key: name
+  button:
+    type: object
+    options:
+      preview:
+        icon: link
+  button.label:
+    type: text
+    comment: Leave empty to hide the button.
+  button.url:
+    type: url

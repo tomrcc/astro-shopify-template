@@ -1,0 +1,15 @@
+{
+  "ssg": "astro",
+  "build": {
+    "install_command": "npm ci",
+    "build_command": "npm run build",
+    "output_path": "dist",
+    "node_version": "file",
+    "environment_variables": [
+      {
+        "key": "PUBLIC_EDITOR_BUILD",
+        "value": "true"
+      }
+    ]
+  }
+}

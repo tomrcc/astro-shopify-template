@@ -1,0 +1,28 @@
+label: Testimonial
+icon: format_quote
+picker_preview:
+  text:
+    - Testimonial
+  icon:
+    - format_quote
+preview:
+  text:
+    - key: author
+    - Testimonial
+  subtext:
+    - key: quote
+  icon:
+    - format_quote
+value:
+  _type: testimonial
+  quote: What a customer said.
+  author: Customer name
+  role:
+_inputs:
+  quote:
+    type: textarea
+  author:
+    type: text
+  role:
+    type: text
+    comment: Such as a city or "Verified buyer".

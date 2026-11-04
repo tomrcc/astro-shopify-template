@@ -1,0 +1,14 @@
+---
+import type { BlockProps } from '../../content.config';
+
+type Props = BlockProps<'cta'>;
+
+const { heading, text, button } = Astro.props;
+---
+<section class="section cta">
+	{heading && <h2 data-editable="text" data-prop="heading">{heading}</h2>}
+	{text && <p data-editable="text" data-prop="text">{text}</p>}
+	{button?.label?.trim() && (
+		<a class="button" href={button.url || '/'} data-editable="text" data-prop="button.label">{button.label}</a>
+	)}
+</section>

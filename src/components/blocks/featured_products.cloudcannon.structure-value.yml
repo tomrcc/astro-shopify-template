@@ -1,0 +1,47 @@
+label: Featured products
+icon: storefront
+picker_preview:
+  text:
+    - Featured products
+  icon:
+    - storefront
+preview:
+  text:
+    - key: heading
+    - Featured products
+  icon:
+    - storefront
+value:
+  _type: featured_products
+  heading: Featured
+  intro:
+  products: []
+  button:
+    label:
+    url:
+_inputs:
+  heading:
+    type: text
+  intro:
+    type: textarea
+  products:
+    type: multiselect
+    comment: Shown in this order. Products, prices and photos come from Shopify.
+    options:
+      values: data.shopify_products
+      value_key: handle
+      preview:
+        text:
+          - key: title
+        image:
+          - key: featuredImage.url
+  button:
+    type: object
+    options:
+      preview:
+        icon: link
+  button.label:
+    type: text
+    comment: Leave empty to hide the button.
+  button.url:
+    type: url

@@ -1,0 +1,13 @@
+---
+import site from '../data/site.json';
+---
+<footer class="site-footer">
+	<p data-editable="text" data-prop="@data[site].footer_text">{site.footer_text}</p>
+	<ul class="footer-links" data-editable="array" data-prop="@data[site].footer_links">
+		{site.footer_links.map((link) => (
+			<li data-editable="array-item">
+				<a href={link.url || '/'} data-editable="text" data-prop="label">{link.label}</a>
+			</li>
+		))}
+	</ul>
+</footer>

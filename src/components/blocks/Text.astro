@@ -1,0 +1,12 @@
+---
+import type { BlockProps } from '../../content.config';
+import { markdown } from '../../lib/markdown';
+
+type Props = BlockProps<'text'>;
+
+const { heading, content } = Astro.props;
+---
+<section class="section text-block">
+	{heading && <h2 data-editable="text" data-prop="heading">{heading}</h2>}
+	{content && <div class="prose" data-editable="text" data-type="block" data-prop="content" set:html={markdown(content)} />}
+</section>

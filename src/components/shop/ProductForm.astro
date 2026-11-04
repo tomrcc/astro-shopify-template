@@ -1,0 +1,140 @@
+---
+import type { Product } from '../../lib/shopify/types';
+import PriceView from './PriceView.astro';
+import LivePrice from '../server/LivePrice.astro';
+import EditorNote from '../EditorNote.astro';
+import { editorBuild } from '../../lib/editor-build';
+import shop from '../../data/shop.json';
+
+interface Props {
+	product: Product;
+}
+const { product } = Astro.props;
+const variants = product.variants.nodes;
+const initial = variants.find((variant) => variant.availableForSale) ?? variants[0];
+const built = {
+	id: initial.id,
+	price: initial.price,
+	compareAtPrice: initial.compareAtPrice,
+	availableForSale: initial.availableForSale,
+};
+// Shopify gives single-variant products one option named "Title".
+const options = product.options.filter((option) => !(option.name === 'Title' && option.optionValues.length === 1));
+const selected = (name: string) => initial.selectedOptions.find((option) => option.name === name)?.value;
+---
+<div class="product-form" data-product-form data-sold-out-label={shop.sold_out_label} data-add-label={shop.add_to_cart_label}>
+	<script type="application/json" data-variants set:html={JSON.stringify(variants)} />
+	<div class="price" data-price>
+		{editorBuild ? (
+			<span>
+				<PriceView {...built} soldOutLabel={shop.sold_out_label} />
+				<EditorNote note="Price and stock are checked with Shopify on the live site. This is the price from the last build." />
+			</span>
+		) : (
+			<LivePrice server:defer handle={product.handle} built={built} soldOutLabel={shop.sold_out_label}>
+				<PriceView slot="fallback" {...built} soldOutLabel={shop.sold_out_label} />
+			</LivePrice>
+		)}
+	</div>
+	{options.map((option) => (
+		<fieldset class="option">
+			<legend>{option.name}</legend>
+			<div class="option-values">
+				{option.optionValues.map((value) => (
+					<label>
+						<input type="radio" name={option.name} value={value.name} checked={selected(option.name) === value.name} />
+						<span>{value.name}</span>
+					</label>
+				))}
+			</div>
+		</fieldset>
+	))}
+	<button class="button add-to-cart" type="button" data-add disabled={!initial.availableForSale} data-variant-id={initial.id}>
+		{initial.availableForSale ? shop.add_to_cart_label : shop.sold_out_label}
+	</button>
+	<p class="form-error" data-error hidden></p>
+</div>
+
+<script>
+	import { addToCart } from '../../lib/shopify/cart';
+	import { formatMoney } from '../../lib/shopify/money';
+	import type { LiveVariant, Variant } from '../../lib/shopify/types';
+
+	const editorBuild = import.meta.env.PUBLIC_EDITOR_BUILD === 'true';
+
+	// A plain element, not a custom element: Astro sets up a server island twice inside a custom element tag.
+	class ProductForm {
+		constructor(private root: HTMLElement) {
+			this.root.addEventListener('change', () => this.update());
+			this.root.querySelector('[data-add]')?.addEventListener('click', () => this.add());
+			// The island replaces the build's price with the first variant's, so reapply any choice made meanwhile.
+			const observer = new MutationObserver(() => {
+				if (!this.root.querySelector('[data-live-variants]')) return;
+				observer.disconnect();
+				this.update();
+			});
+			observer.observe(this.root.querySelector('[data-price]')!, { childList: true, subtree: true });
+		}
+
+		get variants(): Variant[] {
+			return JSON.parse(this.root.querySelector('[data-variants]')?.textContent || '[]');
+		}
+
+		// The live data arrives with the server island and wins over the build's copy.
+		get live(): LiveVariant[] {
+			return JSON.parse(this.root.querySelector('[data-live-variants]')?.textContent || '[]');
+		}
+
+		get chosen() {
+			const values = new FormData();
+			this.root.querySelectorAll<HTMLInputElement>('input[type=radio]:checked').forEach((input) => values.set(input.name, input.value));
+			const variant = this.variants.find((item) => item.selectedOptions.every((option) => values.get(option.name) === option.value));
+			if (!variant) return undefined;
+			return { ...variant, ...this.live.find((item) => item.id === variant.id) };
+		}
+
+		update() {
+			const variant = this.chosen;
+			const button = this.root.querySelector<HTMLButtonElement>('[data-add]')!;
+			const price = this.root.querySelector('[data-price]')!;
+			const soldOut = this.root.dataset.soldOutLabel!;
+			if (!variant) {
+				button.disabled = true;
+				button.textContent = soldOut;
+				return;
+			}
+			const onSale = variant.compareAtPrice && Number(variant.compareAtPrice.amount) > Number(variant.price.amount);
+			const view = document.createElement('span');
+			view.className = 'price-view';
+			view.innerHTML = `<span class="price-current"></span>${onSale ? '<s class="price-compare"></s>' : ''}${variant.availableForSale ? '' : '<span class="price-sold-out"></span>'}`;
+			view.querySelector('.price-current')!.textContent = formatMoney(variant.price);
+			if (onSale) view.querySelector('.price-compare')!.textContent = formatMoney(variant.compareAtPrice!);
+			if (!variant.availableForSale) view.querySelector('.price-sold-out')!.textContent = soldOut;
+			price.querySelector('.price-view')?.replaceWith(view);
+
+			button.disabled = !variant.availableForSale;
+			button.dataset.variantId = variant.id;
+			button.textContent = variant.availableForSale ? this.root.dataset.addLabel! : soldOut;
+			if (variant.image) document.dispatchEvent(new CustomEvent('product:image', { detail: variant.image.url }));
+		}
+
+		async add() {
+			const button = this.root.querySelector<HTMLButtonElement>('[data-add]')!;
+			const error = this.root.querySelector<HTMLElement>('[data-error]')!;
+			if (editorBuild || !button.dataset.variantId) return;
+			button.disabled = true;
+			error.hidden = true;
+			try {
+				await addToCart(button.dataset.variantId);
+				document.dispatchEvent(new CustomEvent('cart:open'));
+			} catch (caught) {
+				error.textContent = (caught as Error).message;
+				error.hidden = false;
+			} finally {
+				button.disabled = false;
+			}
+		}
+	}
+
+	document.querySelectorAll<HTMLElement>('[data-product-form]').forEach((root) => new ProductForm(root));
+</script>

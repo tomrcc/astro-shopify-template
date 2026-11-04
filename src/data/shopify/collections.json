@@ -1,0 +1,82 @@
+[
+  {
+    "handle": "accessories",
+    "title": "Accessories",
+    "image": {
+      "url": "https://cdn.shopify.com/mock-shop-production-media/_seeds/demostore/50feaf31c30dcf2c278742980c52cc43e836bf59de53a0fdd25dcfdce020c7f6.png",
+      "altText": null,
+      "width": 1024,
+      "height": 1024
+    }
+  },
+  {
+    "handle": "bottoms",
+    "title": "Bottoms",
+    "image": {
+      "url": "https://cdn.shopify.com/mock-shop-production-media/_seeds/demostore/7ece5a2d470779becd82f282332c167024b3bee2b4631e7e1e9a5a975380baee.png",
+      "altText": null,
+      "width": 1024,
+      "height": 1024
+    }
+  },
+  {
+    "handle": "featured",
+    "title": "Featured",
+    "image": {
+      "url": "https://cdn.shopify.com/mock-shop-production-media/_seeds/demostore/4186bc9c24a92995f6781986fd5756050712459e8c773ae9aa6918ac46a054f6.png",
+      "altText": null,
+      "width": 2048,
+      "height": 1778
+    }
+  },
+  {
+    "handle": "men",
+    "title": "Men",
+    "image": {
+      "url": "https://cdn.shopify.com/mock-shop-production-media/_seeds/demostore/1685d5abe3e11df2a5ae2017646441bafb1f815893bbcc953296c3040175eb4f.png",
+      "altText": null,
+      "width": 1024,
+      "height": 1024
+    }
+  },
+  {
+    "handle": "shoes",
+    "title": "Shoes",
+    "image": {
+      "url": "https://cdn.shopify.com/mock-shop-production-media/_seeds/demostore/1a2a779c63f3e232e86d053402fcfd434b87dbddb40ebf594084c38269392081.png",
+      "altText": null,
+      "width": 1024,
+      "height": 1024
+    }
+  },
+  {
+    "handle": "tops",
+    "title": "Tops",
+    "image": {
+      "url": "https://cdn.shopify.com/mock-shop-production-media/_seeds/demostore/db4ffb969021953f433507dfaa8ef7b469c955f0a02fa5c870dbf2743fb83da2.png",
+      "altText": null,
+      "width": 1024,
+      "height": 1024
+    }
+  },
+  {
+    "handle": "unisex",
+    "title": "Unisex",
+    "image": {
+      "url": "https://cdn.shopify.com/mock-shop-production-media/_seeds/demostore/146052825418e1d78fd3b1be7f209ff0081de5a8694df87f65561cf601190e46.png",
+      "altText": null,
+      "width": 1024,
+      "height": 1024
+    }
+  },
+  {
+    "handle": "women",
+    "title": "Women",
+    "image": {
+      "url": "https://cdn.shopify.com/mock-shop-production-media/_seeds/demostore/2df0f75738a7a6e959e1e11f6227ee470802bf466ba7c52fb41819fbaac53e21.png",
+      "altText": null,
+      "width": 1024,
+      "height": 1024
+    }
+  }
+]

@@ -1,0 +1,93 @@
+---
+import shop from '../../data/shop.json';
+---
+<cart-drawer data-empty={shop.cart_empty}>
+	<dialog class="cart-drawer" aria-labelledby="cart-heading">
+		<div class="cart-head">
+			<h2 id="cart-heading">{shop.cart_heading}</h2>
+			<button type="button" class="cart-close" data-close aria-label="Close cart">×</button>
+		</div>
+		<ul class="cart-lines" data-lines></ul>
+		<div class="cart-foot" data-foot hidden>
+			<p class="cart-subtotal"><span>Subtotal</span> <strong data-subtotal></strong></p>
+			<p class="cart-note">{shop.shipping_note}</p>
+			<a class="button cart-checkout" data-checkout href="#">{shop.checkout_label}</a>
+		</div>
+	</dialog>
+</cart-drawer>
+
+<script>
+	import { loadCart, setLineQuantity } from '../../lib/shopify/cart';
+	import { formatMoney } from '../../lib/shopify/money';
+	import type { Cart } from '../../lib/shopify/types';
+
+	class CartDrawer extends HTMLElement {
+		connectedCallback() {
+			const dialog = this.querySelector('dialog')!;
+			this.querySelector('[data-close]')!.addEventListener('click', () => dialog.close());
+			dialog.addEventListener('click', (event) => {
+				if (event.target === dialog) dialog.close();
+			});
+			document.addEventListener('cart:open', () => dialog.showModal());
+			document.addEventListener('cart:change', (event) => this.render((event as CustomEvent<Cart | null>).detail));
+			this.addEventListener('click', (event) => {
+				const button = (event.target as HTMLElement).closest<HTMLButtonElement>('[data-line]');
+				if (!button) return;
+				button.disabled = true;
+				setLineQuantity(button.dataset.line!, Number(button.dataset.quantity)).catch(() => (button.disabled = false));
+			});
+			loadCart().catch(() => {});
+		}
+
+		render(cart: Cart | null) {
+			const lines = this.querySelector('[data-lines]')!;
+			const foot = this.querySelector<HTMLElement>('[data-foot]')!;
+			lines.replaceChildren();
+			document.querySelectorAll('[data-cart-count]').forEach((count) => (count.textContent = String(cart?.totalQuantity ?? 0)));
+
+			if (!cart?.lines.nodes.length) {
+				const empty = document.createElement('li');
+				empty.className = 'cart-empty';
+				empty.textContent = this.dataset.empty!;
+				lines.append(empty);
+				foot.hidden = true;
+				return;
+			}
+
+			for (const line of cart.lines.nodes) {
+				const item = document.createElement('li');
+				item.className = 'cart-line';
+				item.innerHTML = `
+					<img alt="" width="64" height="64">
+					<div><a class="cart-line-title"></a><span class="cart-line-variant"></span><span class="cart-line-price"></span></div>
+					<div class="cart-qty">
+						<button type="button" aria-label="Remove one">−</button>
+						<span></span>
+						<button type="button" aria-label="Add one">+</button>
+					</div>`;
+				const image = item.querySelector('img')!;
+				if (line.merchandise.image) {
+					const src = new URL(line.merchandise.image.url);
+					src.searchParams.set('width', '128');
+					image.src = src.toString();
+				} else image.remove();
+				const title = item.querySelector<HTMLAnchorElement>('.cart-line-title')!;
+				title.href = `/products/${line.merchandise.product.handle}/`;
+				title.textContent = line.merchandise.product.title;
+				item.querySelector('.cart-line-variant')!.textContent = line.merchandise.title === 'Default Title' ? '' : line.merchandise.title;
+				item.querySelector('.cart-line-price')!.textContent = formatMoney(line.cost.totalAmount);
+				item.querySelector('.cart-qty span')!.textContent = String(line.quantity);
+				const [less, more] = item.querySelectorAll<HTMLButtonElement>('.cart-qty button');
+				Object.assign(less.dataset, { line: line.id, quantity: String(line.quantity - 1) });
+				Object.assign(more.dataset, { line: line.id, quantity: String(line.quantity + 1) });
+				lines.append(item);
+			}
+
+			this.querySelector('[data-subtotal]')!.textContent = formatMoney(cart.cost.subtotalAmount);
+			this.querySelector<HTMLAnchorElement>('[data-checkout]')!.href = cart.checkoutUrl;
+			foot.hidden = false;
+		}
+	}
+
+	customElements.define('cart-drawer', CartDrawer);
+</script>

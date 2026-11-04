@@ -1,0 +1,31 @@
+label: Collection grid
+icon: grid_view
+picker_preview:
+  text:
+    - Collection grid
+  icon:
+    - grid_view
+preview:
+  text:
+    - key: heading
+    - Collection grid
+  icon:
+    - grid_view
+value:
+  _type: collection_grid
+  heading: Shop by category
+  collections: []
+_inputs:
+  heading:
+    type: text
+  collections:
+    type: multiselect
+    comment: Shown in this order. Collections and their photos come from Shopify.
+    options:
+      values: data.shopify_collections
+      value_key: handle
+      preview:
+        text:
+          - key: title
+        image:
+          - key: image.url

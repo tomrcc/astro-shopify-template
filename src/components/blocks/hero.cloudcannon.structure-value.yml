@@ -1,0 +1,43 @@
+label: Hero
+icon: flag
+picker_preview:
+  text:
+    - Hero
+  icon:
+    - flag
+preview:
+  text:
+    - key: heading
+    - Hero
+  icon:
+    - flag
+  image:
+    - key: image
+value:
+  _type: hero
+  heading: Your headline
+  subheading:
+  image:
+  image_alt:
+  button:
+    label: Shop now
+    url: /collections/featured/
+_inputs:
+  heading:
+    type: text
+  subheading:
+    type: textarea
+  image:
+    type: image
+  image_alt:
+    type: text
+    label: Image description
+  button:
+    type: object
+    options:
+      preview:
+        icon: link
+  button.label:
+    type: text
+  button.url:
+    type: url

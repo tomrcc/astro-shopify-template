@@ -1,0 +1,18 @@
+---
+import type { BlockProps } from '../../content.config';
+import { markdown } from '../../lib/markdown';
+
+type Props = BlockProps<'image_text'>;
+
+const { heading, content, image, image_alt, image_side, button } = Astro.props;
+---
+<section class:list={['section', 'image-text', { 'image-right': image_side === 'right' }]}>
+	{image && <img src={image} alt={image_alt ?? ''} loading="lazy" data-editable="image" data-prop-src="image" data-prop-alt="image_alt" />}
+	<div>
+		{heading && <h2 data-editable="text" data-prop="heading">{heading}</h2>}
+		{content && <div class="prose" data-editable="text" data-type="block" data-prop="content" set:html={markdown(content)} />}
+		{button?.label?.trim() && (
+			<a class="button" href={button.url || '/'} data-editable="text" data-prop="button.label">{button.label}</a>
+		)}
+	</div>
+</section>

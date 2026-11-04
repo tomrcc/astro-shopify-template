@@ -1,0 +1,31 @@
+---
+import site from '../data/site.json';
+import announcement from '../data/announcement.json';
+---
+{announcement.enabled && announcement.text && (
+	<div class="announcement">
+		<span data-editable="text" data-prop="@data[announcement].text">{announcement.text}</span>
+		{announcement.link.label?.trim() && (
+			<a href={announcement.link.url || '/'} data-editable="text" data-prop="@data[announcement].link.label">{announcement.link.label}</a>
+		)}
+	</div>
+)}
+<header class="site-header">
+	<a class="site-title" href="/" data-editable="text" data-prop="@data[site].title">{site.title}</a>
+	<nav aria-label="Main">
+		<ul class="nav-links" data-editable="array" data-prop="@data[site].nav">
+			{site.nav.map((link) => (
+				<li data-editable="array-item">
+					<a href={link.url || '/'} data-editable="text" data-prop="label">{link.label}</a>
+				</li>
+			))}
+		</ul>
+	</nav>
+	<button type="button" class="cart-button" data-open-cart aria-label="Open cart">
+		Cart <span class="cart-count" data-cart-count>0</span>
+	</button>
+</header>
+
+<script>
+	document.querySelector('[data-open-cart]')?.addEventListener('click', () => document.dispatchEvent(new CustomEvent('cart:open')));
+</script>

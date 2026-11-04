@@ -1,0 +1,34 @@
+label: Call to action
+icon: ads_click
+picker_preview:
+  text:
+    - Call to action
+  icon:
+    - ads_click
+preview:
+  text:
+    - key: heading
+    - Call to action
+  icon:
+    - ads_click
+value:
+  _type: cta
+  heading: Ready to look?
+  text:
+  button:
+    label: Shop now
+    url: /collections/featured/
+_inputs:
+  heading:
+    type: text
+  text:
+    type: textarea
+  button:
+    type: object
+    options:
+      preview:
+        icon: link
+  button.label:
+    type: text
+  button.url:
+    type: url

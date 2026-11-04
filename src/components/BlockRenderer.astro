@@ -1,0 +1,7 @@
+---
+import { componentMap } from '../cloudcannon/componentMap';
+
+const { _type, ...props } = Astro.props;
+const Component = componentMap[_type as string];
+---
+{Component && <Component {...props} />}

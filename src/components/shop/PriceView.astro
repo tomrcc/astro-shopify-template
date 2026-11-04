@@ -1,0 +1,18 @@
+---
+import type { Money } from '../../lib/shopify/types';
+import { formatMoney } from '../../lib/shopify/money';
+
+interface Props {
+	price: Money;
+	compareAtPrice: Money | null;
+	availableForSale: boolean;
+	soldOutLabel: string;
+}
+const { price, compareAtPrice, availableForSale, soldOutLabel } = Astro.props;
+const onSale = compareAtPrice && Number(compareAtPrice.amount) > Number(price.amount);
+---
+<span class="price-view">
+	<span class="price-current">{formatMoney(price)}</span>
+	{onSale && <s class="price-compare">{formatMoney(compareAtPrice)}</s>}
+	{!availableForSale && <span class="price-sold-out">{soldOutLabel}</span>}
+</span>
