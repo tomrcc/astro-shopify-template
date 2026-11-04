@@ -1,13 +1,13 @@
 {
-  "title": "Field & Thread",
-  "description": "Everyday clothing made to be worn hard and kept for years.",
+  "title": "Ridgeline Boards",
+  "description": "Snowboards made to be ridden hard and kept for years.",
   "nav": [
-    { "label": "Shop all", "url": "/collections/featured/" },
-    { "label": "Tops", "url": "/collections/tops/" },
-    { "label": "Accessories", "url": "/collections/accessories/" },
+    { "label": "Shop all", "url": "/collections/all/" },
+    { "label": "The full range", "url": "/collections/automated-collection/" },
+    { "label": "Hydrogen series", "url": "/collections/hydrogen/" },
     { "label": "Our story", "url": "/about/" }
   ],
-  "footer_text": "Field & Thread is a demo store. Products come from Shopify; everything else is edited in CloudCannon.",
+  "footer_text": "Ridgeline Boards is a demo store. Products come from Shopify; everything else is edited in CloudCannon.",
   "footer_links": [
     { "label": "About", "url": "/about/" },
     { "label": "Care guide", "url": "/care-guide/" },

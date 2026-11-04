@@ -4,7 +4,7 @@ import Base from '../../layouts/Base.astro';
 import BlockRenderer from '../../components/BlockRenderer.astro';
 import ProductCard from '../../components/shop/ProductCard.astro';
 import EditorNote from '../../components/EditorNote.astro';
-import { getAllCollections } from '../../lib/shopify/catalog';
+import { ALL_PRODUCTS, getAllCollections } from '../../lib/shopify/catalog';
 import { markdown } from '../../lib/markdown';
 
 export async function getStaticPaths() {
@@ -35,7 +35,7 @@ const heading = intro?.data.heading || collection.title;
 					<li><ProductCard product={product} /></li>
 				))}
 			</ul>
-			<EditorNote note="Which products appear, and their order, comes from this collection in Shopify admin." />
+			<EditorNote note={collection.handle === ALL_PRODUCTS.handle ? "Lists every product in Shopify, in title order." : "Which products appear, and their order, comes from this collection in Shopify admin."} />
 		</div>
 	</section>
 	{intro && (

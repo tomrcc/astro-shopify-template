@@ -18,7 +18,15 @@ export async function getAllProducts() {
 	return products;
 }
 
+// The Storefront API has no "all products" collection, so the catalog adds one at
+// /collections/all/. A real Shopify collection with that handle takes its place.
+export const ALL_PRODUCTS = { handle: 'all', title: 'All products' };
+
 export async function getAllCollections() {
-	const { collections } = await shopify<{ collections: { nodes: Collection[] } }>(COLLECTIONS);
-	return collections.nodes;
+	const [{ collections }, products] = await Promise.all([
+		shopify<{ collections: { nodes: Collection[] } }>(COLLECTIONS),
+		getAllProducts(),
+	]);
+	if (collections.nodes.some((collection) => collection.handle === ALL_PRODUCTS.handle)) return collections.nodes;
+	return [{ ...ALL_PRODUCTS, description: '', image: null, products: { nodes: products } }, ...collections.nodes];
 }

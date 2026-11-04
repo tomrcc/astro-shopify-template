@@ -1,494 +1,268 @@
 [
   {
-    "handle": "beanie",
-    "title": "Beanie",
+    "handle": "a-whole-bear-attack",
+    "title": "A whole bear attack",
     "availableForSale": true,
     "featuredImage": {
-      "url": "https://cdn.shopify.com/mock-shop-production-media/_seeds/demostore/415ce2e1c8c97a330e7285eca8b50a1f3ab5bfc36f9a576f6930145619d28ae4.jpg",
+      "url": "https://cdn.shopify.com/s/files/1/1020/2690/3830/files/pexels-enzo-elgalgo.jpg?v=1793756571",
       "altText": null,
-      "width": 4096,
-      "height": 4096
+      "width": 1920,
+      "height": 1280
     },
     "priceRange": {
       "minVariantPrice": {
-        "amount": "100.0",
-        "currencyCode": "CAD"
+        "amount": "3.5",
+        "currencyCode": "USD"
       }
     }
   },
   {
-    "handle": "black-sunnies",
-    "title": "Black Sunnies",
-    "availableForSale": true,
-    "featuredImage": {
-      "url": "https://cdn.shopify.com/mock-shop-production-media/_seeds/demostore/850dfaa66527a41f23bfc455ec05fa5229988f2e92519efc116b023a5a820f1f.jpg",
-      "altText": null,
-      "width": 4096,
-      "height": 4096
-    },
-    "priceRange": {
-      "minVariantPrice": {
-        "amount": "50.0",
-        "currencyCode": "CAD"
-      }
-    }
-  },
-  {
-    "handle": "canvas-sneakers",
-    "title": "Canvas Sneakers",
-    "availableForSale": true,
-    "featuredImage": {
-      "url": "https://cdn.shopify.com/mock-shop-production-media/_seeds/demostore/4e6a1c46ff8e481db3972a6c2e816e878ab78acf2d6593ca9cf8ac9d5a344b3a.jpg",
-      "altText": null,
-      "width": 4096,
-      "height": 4096
-    },
-    "priceRange": {
-      "minVariantPrice": {
-        "amount": "40.0",
-        "currencyCode": "CAD"
-      }
-    }
-  },
-  {
-    "handle": "clear-sunnies",
-    "title": "Clear Sunnies",
+    "handle": "gift-card",
+    "title": "Gift Card",
     "availableForSale": false,
     "featuredImage": {
-      "url": "https://cdn.shopify.com/mock-shop-production-media/_seeds/demostore/ecee805e15f6fd436f3a8201fe20dffbc1cfd245485d3165a65644e26e4dca26.jpg",
-      "altText": null,
-      "width": 4096,
-      "height": 4096
-    },
-    "priceRange": {
-      "minVariantPrice": {
-        "amount": "25.0",
-        "currencyCode": "CAD"
-      }
-    }
-  },
-  {
-    "handle": "frontpack",
-    "title": "Frontpack",
-    "availableForSale": true,
-    "featuredImage": {
-      "url": "https://cdn.shopify.com/mock-shop-production-media/_seeds/demostore/9a91ba812237969c5b8c51d586ac4206548f27d88756ac96619790c461eb988c.jpg",
-      "altText": null,
-      "width": 4096,
-      "height": 4096
-    },
-    "priceRange": {
-      "minVariantPrice": {
-        "amount": "200.0",
-        "currencyCode": "CAD"
-      }
-    }
-  },
-  {
-    "handle": "gray-leather-sneakers",
-    "title": "Gray Leather Sneakers",
-    "availableForSale": true,
-    "featuredImage": {
-      "url": "https://cdn.shopify.com/mock-shop-production-media/_seeds/demostore/a70ad4a5100e25be731159d1c6ec53517c407cf93a48ed3ca0184a879276d9c2.jpg",
-      "altText": null,
-      "width": 4096,
-      "height": 4096
-    },
-    "priceRange": {
-      "minVariantPrice": {
-        "amount": "1000.0",
-        "currencyCode": "CAD"
-      }
-    }
-  },
-  {
-    "handle": "gray-runners",
-    "title": "Gray Runners",
-    "availableForSale": true,
-    "featuredImage": {
-      "url": "https://cdn.shopify.com/mock-shop-production-media/_seeds/demostore/797e1d2346b3df0d3b82749af3a05a265f0e61e5067a14bdc9ba0e204a02ab21.jpg",
-      "altText": null,
-      "width": 4096,
-      "height": 4096
-    },
-    "priceRange": {
-      "minVariantPrice": {
-        "amount": "30.0",
-        "currencyCode": "CAD"
-      }
-    }
-  },
-  {
-    "handle": "half-zip",
-    "title": "Half Zip",
-    "availableForSale": true,
-    "featuredImage": {
-      "url": "https://cdn.shopify.com/mock-shop-production-media/_seeds/demostore/9e803ec74aad4ea090069ff99a4b82b78a023a76b84e53b457632b624166e67d.jpg",
-      "altText": null,
-      "width": 4096,
-      "height": 4096
-    },
-    "priceRange": {
-      "minVariantPrice": {
-        "amount": "100.0",
-        "currencyCode": "CAD"
-      }
-    }
-  },
-  {
-    "handle": "high-top-sneakers",
-    "title": "High Top Sneakers",
-    "availableForSale": true,
-    "featuredImage": {
-      "url": "https://cdn.shopify.com/mock-shop-production-media/_seeds/demostore/bb74594d8c235ffbf67f512fa1a7583df84595d7320e5145b35f169b7a7f2f6c.jpg",
-      "altText": null,
-      "width": 4096,
-      "height": 4096
-    },
-    "priceRange": {
-      "minVariantPrice": {
-        "amount": "180.0",
-        "currencyCode": "CAD"
-      }
-    }
-  },
-  {
-    "handle": "hoodie-old",
-    "title": "Hoodie",
-    "availableForSale": true,
-    "featuredImage": {
-      "url": "https://cdn.shopify.com/mock-shop-production-media/_seeds/demostore/3d4d46da1bdbda2bf52f92987e6d4108770eb0a8f233f63a279849fce731f5af.jpg",
-      "altText": null,
-      "width": 4096,
-      "height": 4096
-    },
-    "priceRange": {
-      "minVariantPrice": {
-        "amount": "90.0",
-        "currencyCode": "CAD"
-      }
-    }
-  },
-  {
-    "handle": "hoodie",
-    "title": "Hoodie",
-    "availableForSale": true,
-    "featuredImage": {
-      "url": "https://cdn.shopify.com/mock-shop-production-media/_seeds/demostore/f68a0d349c21e1fe5e33597cc4e6f98f60d7e92151a1c09747597d56e83707ef.jpg",
-      "altText": null,
-      "width": 4096,
-      "height": 4096
-    },
-    "priceRange": {
-      "minVariantPrice": {
-        "amount": "90.0",
-        "currencyCode": "CAD"
-      }
-    }
-  },
-  {
-    "handle": "leggings",
-    "title": "Leggings",
-    "availableForSale": false,
-    "featuredImage": {
-      "url": "https://cdn.shopify.com/mock-shop-production-media/_seeds/demostore/36b42e474080383395e8126a08daafcfcfe2509d2b4b6855f376350ba71b9233.jpg",
-      "altText": null,
-      "width": 4096,
-      "height": 4096
-    },
-    "priceRange": {
-      "minVariantPrice": {
-        "amount": "20.0",
-        "currencyCode": "CAD"
-      }
-    }
-  },
-  {
-    "handle": "light-puffer",
-    "title": "Light Puffer",
-    "availableForSale": true,
-    "featuredImage": {
-      "url": "https://cdn.shopify.com/mock-shop-production-media/_seeds/demostore/953af70df34acb1ef64da0bdd5545f66362ee2579ed8faf78ad04b723066caec.jpg",
-      "altText": null,
-      "width": 4096,
-      "height": 4096
-    },
-    "priceRange": {
-      "minVariantPrice": {
-        "amount": "80.0",
-        "currencyCode": "CAD"
-      }
-    }
-  },
-  {
-    "handle": "men-crewneck",
-    "title": "Men's Crewneck",
-    "availableForSale": true,
-    "featuredImage": {
-      "url": "https://cdn.shopify.com/mock-shop-production-media/_seeds/demostore/4ecbbab490d5a90c04074428b4b0e09358c6895050db590ffbb84e1f8e05fbbc.jpg",
-      "altText": null,
-      "width": 4096,
-      "height": 4096
-    },
-    "priceRange": {
-      "minVariantPrice": {
-        "amount": "120.0",
-        "currencyCode": "CAD"
-      }
-    }
-  },
-  {
-    "handle": "men-t-shirt",
-    "title": "Men's T-shirt",
-    "availableForSale": true,
-    "featuredImage": {
-      "url": "https://cdn.shopify.com/mock-shop-production-media/_seeds/demostore/c99af4de567f8baafab47fa2d5267d83a997f9082892f01d7145c0eaa5403832.jpg",
-      "altText": null,
-      "width": 4096,
-      "height": 4096
-    },
-    "priceRange": {
-      "minVariantPrice": {
-        "amount": "40.0",
-        "currencyCode": "CAD"
-      }
-    }
-  },
-  {
-    "handle": "puffer",
-    "title": "Puffer",
-    "availableForSale": true,
-    "featuredImage": {
-      "url": "https://cdn.shopify.com/mock-shop-production-media/_seeds/demostore/20834f7f1039586bb547d0f28f94c37a2be2976705274de37ac424539c9046dd.jpg",
-      "altText": null,
-      "width": 4096,
-      "height": 4096
-    },
-    "priceRange": {
-      "minVariantPrice": {
-        "amount": "80.0",
-        "currencyCode": "CAD"
-      }
-    }
-  },
-  {
-    "handle": "puffer-jacket",
-    "title": "Puffer Jacket",
-    "availableForSale": true,
-    "featuredImage": {
-      "url": "https://cdn.shopify.com/mock-shop-production-media/_seeds/demostore/d0d927ae26c636dae24fae128e1b424ccd5ea76c9a921ac293389f70a688a9dc.jpg",
-      "altText": null,
-      "width": 4096,
-      "height": 4096
-    },
-    "priceRange": {
-      "minVariantPrice": {
-        "amount": "90.0",
-        "currencyCode": "CAD"
-      }
-    }
-  },
-  {
-    "handle": "shorts",
-    "title": "Shorts",
-    "availableForSale": true,
-    "featuredImage": {
-      "url": "https://cdn.shopify.com/mock-shop-production-media/_seeds/demostore/631607a39677fdc2ff99f21a55560629e49e5c5e15c1212c4e9186fa995cb65d.jpg",
-      "altText": null,
-      "width": 4096,
-      "height": 4096
-    },
-    "priceRange": {
-      "minVariantPrice": {
-        "amount": "45.0",
-        "currencyCode": "CAD"
-      }
-    }
-  },
-  {
-    "handle": "slides",
-    "title": "Slides",
-    "availableForSale": true,
-    "featuredImage": {
-      "url": "https://cdn.shopify.com/mock-shop-production-media/_seeds/demostore/2b6e548b7deeed36367218be099c91d2366145fdac845fa32455c6ee502cdaea.jpg",
-      "altText": null,
-      "width": 4096,
-      "height": 4096
-    },
-    "priceRange": {
-      "minVariantPrice": {
-        "amount": "25.0",
-        "currencyCode": "CAD"
-      }
-    }
-  },
-  {
-    "handle": "soft-cotton-hoodie-in-clay",
-    "title": "Soft Cotton Hoodie in Clay",
-    "availableForSale": false,
-    "featuredImage": {
-      "url": "https://cdn.shopify.com/mock-shop-production-media/_seeds/demostore/f68a0d349c21e1fe5e33597cc4e6f98f60d7e92151a1c09747597d56e83707ef.jpg",
-      "altText": null,
-      "width": 4096,
-      "height": 4096
-    },
-    "priceRange": {
-      "minVariantPrice": {
-        "amount": "90.0",
-        "currencyCode": "CAD"
-      }
-    }
-  },
-  {
-    "handle": "soft-cotton-hoodie-in-green",
-    "title": "Soft Cotton Hoodie in Green",
-    "availableForSale": true,
-    "featuredImage": {
-      "url": "https://cdn.shopify.com/mock-shop-production-media/_seeds/demostore/0f65745f05a1549a7f5eff876fce0351bc1899e9fa304e5f6db014179269de9b.png",
-      "altText": null,
-      "width": 2048,
-      "height": 2048
-    },
-    "priceRange": {
-      "minVariantPrice": {
-        "amount": "90.0",
-        "currencyCode": "CAD"
-      }
-    }
-  },
-  {
-    "handle": "soft-cotton-hoodie-in-jam",
-    "title": "Soft Cotton Hoodie in Jam",
-    "availableForSale": true,
-    "featuredImage": {
-      "url": "https://cdn.shopify.com/mock-shop-production-media/_seeds/demostore/d0d11d66a08324cfd45030ac274df2cf84d2006e14ee29dc6c32d16b4be8b9e4.jpg",
-      "altText": null,
-      "width": 4096,
-      "height": 4096
-    },
-    "priceRange": {
-      "minVariantPrice": {
-        "amount": "90.0",
-        "currencyCode": "CAD"
-      }
-    }
-  },
-  {
-    "handle": "soft-cotton-hoodie-in-ocean",
-    "title": "Soft Cotton Hoodie in Ocean",
-    "availableForSale": true,
-    "featuredImage": {
-      "url": "https://cdn.shopify.com/mock-shop-production-media/_seeds/demostore/24a9b0cb7f9bdd0ffd858cd2c6f588a15923c8456e0d975ed7a0fc9382a4dabf.jpg",
-      "altText": null,
-      "width": 4096,
-      "height": 4096
-    },
-    "priceRange": {
-      "minVariantPrice": {
-        "amount": "90.0",
-        "currencyCode": "CAD"
-      }
-    }
-  },
-  {
-    "handle": "soft-cotton-hoodie-in-violet",
-    "title": "Soft Cotton Hoodie in Violet",
-    "availableForSale": true,
-    "featuredImage": {
-      "url": "https://cdn.shopify.com/mock-shop-production-media/_seeds/demostore/c914b503fa965192c1b48ba70285736f8ff2c7482992ce17cda3a8bfb343a1c9.jpg",
-      "altText": null,
-      "width": 4096,
-      "height": 4096
-    },
-    "priceRange": {
-      "minVariantPrice": {
-        "amount": "90.0",
-        "currencyCode": "CAD"
-      }
-    }
-  },
-  {
-    "handle": "sweatpants",
-    "title": "Sweatpants",
-    "availableForSale": true,
-    "featuredImage": {
-      "url": "https://cdn.shopify.com/mock-shop-production-media/_seeds/demostore/e4fe192f0e86ffc74d3b906f754119d4b5f4432cf01120d090ab7eb5182e8897.jpg",
-      "altText": null,
-      "width": 4096,
-      "height": 4096
-    },
-    "priceRange": {
-      "minVariantPrice": {
-        "amount": "35.0",
-        "currencyCode": "CAD"
-      }
-    }
-  },
-  {
-    "handle": "white-leather-sneakers",
-    "title": "White Leather Sneakers",
-    "availableForSale": true,
-    "featuredImage": {
-      "url": "https://cdn.shopify.com/mock-shop-production-media/_seeds/demostore/f29f7c2c49dfed5f080884f85ffcfd562294da2c83646d0a2c007e00fb2deeb1.jpg",
-      "altText": null,
-      "width": 4096,
-      "height": 4096
-    },
-    "priceRange": {
-      "minVariantPrice": {
-        "amount": "90.0",
-        "currencyCode": "CAD"
-      }
-    }
-  },
-  {
-    "handle": "women-crewneck",
-    "title": "Women's Crewneck",
-    "availableForSale": true,
-    "featuredImage": {
-      "url": "https://cdn.shopify.com/mock-shop-production-media/_seeds/demostore/085e04f1a4d35f4558b5f63769e26716b4d2be95bab0bee52d1f6a85d97d4f31.jpg",
-      "altText": null,
-      "width": 4096,
-      "height": 4096
-    },
-    "priceRange": {
-      "minVariantPrice": {
-        "amount": "120.0",
-        "currencyCode": "CAD"
-      }
-    }
-  },
-  {
-    "handle": "women-t-shirt",
-    "title": "Women's T-shirt",
-    "availableForSale": true,
-    "featuredImage": {
-      "url": "https://cdn.shopify.com/mock-shop-production-media/_seeds/demostore/313a2bf49d67db5a50828cfac7f1466cba32f48bbb0223148ecaeb8fe5e157d6.jpg",
-      "altText": null,
-      "width": 4096,
-      "height": 4096
-    },
-    "priceRange": {
-      "minVariantPrice": {
-        "amount": "40.0",
-        "currencyCode": "CAD"
-      }
-    }
-  },
-  {
-    "handle": "workout-shirt",
-    "title": "Workout Shirt",
-    "availableForSale": true,
-    "featuredImage": {
-      "url": "https://cdn.shopify.com/mock-shop-production-media/_seeds/demostore/23e2d44fd51df6adb548fd353a5bd9388a96d0c8352cec564e13c4c089b252e2.jpg",
-      "altText": null,
-      "width": 4096,
-      "height": 4096
+      "url": "https://cdn.shopify.com/s/files/1/1020/2690/3830/files/gift_card.jpg?v=1793753602",
+      "altText": "Gift card that shows text: Generated data gift card",
+      "width": 1600,
+      "height": 1600
     },
     "priceRange": {
       "minVariantPrice": {
         "amount": "10.0",
-        "currencyCode": "CAD"
+        "currencyCode": "USD"
+      }
+    }
+  },
+  {
+    "handle": "selling-plans-ski-wax",
+    "title": "Selling Plans Ski Wax",
+    "availableForSale": true,
+    "featuredImage": {
+      "url": "https://cdn.shopify.com/s/files/1/1020/2690/3830/files/snowboard_wax.jpg?v=1793753602",
+      "altText": "A bar of golden yellow wax",
+      "width": 1600,
+      "height": 1600
+    },
+    "priceRange": {
+      "minVariantPrice": {
+        "amount": "9.95",
+        "currencyCode": "USD"
+      }
+    }
+  },
+  {
+    "handle": "the-3p-fulfilled-snowboard",
+    "title": "The 3p Fulfilled Snowboard",
+    "availableForSale": true,
+    "featuredImage": {
+      "url": "https://cdn.shopify.com/s/files/1/1020/2690/3830/files/Main_b9e0da7f-db89-4d41-83f0-7f417b02831d.jpg?v=1793753603",
+      "altText": "Top and bottom view of a snowboard. The top view shows 7 stacked hexagons and the bottom view\n          shows a small, centred hexagonal logo for Hydrogen.",
+      "width": 1600,
+      "height": 1600
+    },
+    "priceRange": {
+      "minVariantPrice": {
+        "amount": "2629.95",
+        "currencyCode": "USD"
+      }
+    }
+  },
+  {
+    "handle": "the-collection-snowboard-hydrogen",
+    "title": "The Collection Snowboard: Hydrogen",
+    "availableForSale": true,
+    "featuredImage": {
+      "url": "https://cdn.shopify.com/s/files/1/1020/2690/3830/files/Main_0a40b01b-5021-48c1-80d1-aa8ab4876d3d.jpg?v=1793753602",
+      "altText": "Top and bottom view of a snowboard. The top view shows stylized hydrogen bonds and the bottom view shows \"H2\" in a brush script typeface.",
+      "width": 1600,
+      "height": 1600
+    },
+    "priceRange": {
+      "minVariantPrice": {
+        "amount": "600.0",
+        "currencyCode": "USD"
+      }
+    }
+  },
+  {
+    "handle": "the-collection-snowboard-liquid",
+    "title": "The Collection Snowboard: Liquid",
+    "availableForSale": true,
+    "featuredImage": {
+      "url": "https://cdn.shopify.com/s/files/1/1020/2690/3830/files/Main_b13ad453-477c-4ed1-9b43-81f3345adfd6.jpg?v=1793753605",
+      "altText": "Top and bottom view of a snowboard. The top view shows a stylized scene of water, trees, mountains, sky and a moon in blue colours. The bottom view has a blue liquid, drippy background with the text \"liquid\" in a stylized script typeface.",
+      "width": 1600,
+      "height": 1600
+    },
+    "priceRange": {
+      "minVariantPrice": {
+        "amount": "749.95",
+        "currencyCode": "USD"
+      }
+    }
+  },
+  {
+    "handle": "the-collection-snowboard-oxygen",
+    "title": "The Collection Snowboard: Oxygen",
+    "availableForSale": true,
+    "featuredImage": {
+      "url": "https://cdn.shopify.com/s/files/1/1020/2690/3830/files/Main_d624f226-0a89-4fe1-b333-0d1548b43c06.jpg?v=1793753603",
+      "altText": "Top and bottom view of a snowboard. The top view shows a stylized scene of trees, mountains, sky and a sun in red colours. The bottom view has blue wavy lines in the background with the text \"Oxygen\" in a stylized script typeface.",
+      "width": 1600,
+      "height": 1600
+    },
+    "priceRange": {
+      "minVariantPrice": {
+        "amount": "1025.0",
+        "currencyCode": "USD"
+      }
+    }
+  },
+  {
+    "handle": "the-compare-at-price-snowboard",
+    "title": "The Compare at Price Snowboard",
+    "availableForSale": true,
+    "featuredImage": {
+      "url": "https://cdn.shopify.com/s/files/1/1020/2690/3830/files/snowboard_sky.jpg?v=1793753602",
+      "altText": "Top and bottom view of a snowboard. The top view shows pixelated clouds, with the top-most one being\n        the shape of the Shopify bag logo. The bottom view has a pixelated cloudy sky with blue, pink and purple\n        colours.",
+      "width": 1268,
+      "height": 1600
+    },
+    "priceRange": {
+      "minVariantPrice": {
+        "amount": "785.95",
+        "currencyCode": "USD"
+      }
+    }
+  },
+  {
+    "handle": "the-complete-snowboard",
+    "title": "The Complete Snowboard",
+    "availableForSale": true,
+    "featuredImage": {
+      "url": "https://cdn.shopify.com/s/files/1/1020/2690/3830/files/Main_589fc064-24a2-4236-9eaf-13b2bd35d21d.jpg?v=1793753602",
+      "altText": "Top and bottom view of a snowboard. The top view shows abstract circles and lines in shades of\n          teal. The bottom view shows abstract circles and lines in shades of purple and blue with the text “SHOPIFY”\n          in a sans serif typeface on top.",
+      "width": 1600,
+      "height": 1600
+    },
+    "priceRange": {
+      "minVariantPrice": {
+        "amount": "699.95",
+        "currencyCode": "USD"
+      }
+    }
+  },
+  {
+    "handle": "the-hidden-snowboard",
+    "title": "The Hidden Snowboard",
+    "availableForSale": true,
+    "featuredImage": {
+      "url": "https://cdn.shopify.com/s/files/1/1020/2690/3830/files/Main_c8ff0b5d-c712-429a-be00-b29bd55cbc9d.jpg?v=1793753602",
+      "altText": "The top view and bottom view of a snowboard. The top view is black with a singular peach cube.\n        The bottom view has a graphic of a stack of blocks in a gradient from light blue, to pink to peach.",
+      "width": 1600,
+      "height": 1600
+    },
+    "priceRange": {
+      "minVariantPrice": {
+        "amount": "749.95",
+        "currencyCode": "USD"
+      }
+    }
+  },
+  {
+    "handle": "the-inventory-not-tracked-snowboard",
+    "title": "The Inventory Not Tracked Snowboard",
+    "availableForSale": true,
+    "featuredImage": {
+      "url": "https://cdn.shopify.com/s/files/1/1020/2690/3830/files/snowboard_purple_hydrogen.jpg?v=1793753602",
+      "altText": "Top and bottom view of a snowboard. The top view shows a centred hexagonal logo for Hydrogen that\n          appears to radiate outwards, as well as some overlapping hexagons at the bottom. The bottom view shows an\n          abstract angular grid in purples.",
+      "width": 1268,
+      "height": 1600
+    },
+    "priceRange": {
+      "minVariantPrice": {
+        "amount": "949.95",
+        "currencyCode": "USD"
+      }
+    }
+  },
+  {
+    "handle": "the-minimal-snowboard",
+    "title": "The Minimal Snowboard",
+    "availableForSale": true,
+    "featuredImage": null,
+    "priceRange": {
+      "minVariantPrice": {
+        "amount": "885.95",
+        "currencyCode": "USD"
+      }
+    }
+  },
+  {
+    "handle": "the-multi-location-snowboard",
+    "title": "The Multi-location Snowboard",
+    "availableForSale": true,
+    "featuredImage": {
+      "url": "https://cdn.shopify.com/s/files/1/1020/2690/3830/files/Main_0a4e9096-021a-4c1e-8750-24b233166a12.jpg?v=1793753603",
+      "altText": "Top and bottom view of a snowboard. The top view shows a pixelated Shopify bag logo and a\n        pixelated character reviewing a clipboard with a questioning expression with a bright green-blue background.\n        The bottom view is a pattern of many pixel characters with a bright green-blue background.",
+      "width": 1600,
+      "height": 1600
+    },
+    "priceRange": {
+      "minVariantPrice": {
+        "amount": "729.95",
+        "currencyCode": "USD"
+      }
+    }
+  },
+  {
+    "handle": "the-multi-managed-snowboard",
+    "title": "The Multi-managed Snowboard",
+    "availableForSale": true,
+    "featuredImage": {
+      "url": "https://cdn.shopify.com/s/files/1/1020/2690/3830/files/Main_9129b69a-0c7b-4f66-b6cf-c4222f18028a.jpg?v=1793753603",
+      "altText": "Top and bottom view of a snowboard. The top view shows an illustration with varied outlined shapes\n        in black. The bottom view shows a black box character with an H pointing, and surrounded by black outlined\n        illustrative elements.",
+      "width": 1600,
+      "height": 1600
+    },
+    "priceRange": {
+      "minVariantPrice": {
+        "amount": "629.95",
+        "currencyCode": "USD"
+      }
+    }
+  },
+  {
+    "handle": "the-out-of-stock-snowboard",
+    "title": "The Out of Stock Snowboard",
+    "availableForSale": false,
+    "featuredImage": {
+      "url": "https://cdn.shopify.com/s/files/1/1020/2690/3830/files/Main_f44a9605-cd62-464d-b095-d45cdaa0d0d7.jpg?v=1793753602",
+      "altText": "Top and bottom view of a snowboard. The top view shows a toggle at the top in shades of blue and\n        yellow. The bottom view shows an abstract illustration of toggles in blues and yellows.",
+      "width": 3908,
+      "height": 3908
+    },
+    "priceRange": {
+      "minVariantPrice": {
+        "amount": "885.95",
+        "currencyCode": "USD"
+      }
+    }
+  },
+  {
+    "handle": "the-videographer-snowboard",
+    "title": "The Videographer Snowboard",
+    "availableForSale": true,
+    "featuredImage": {
+      "url": "https://cdn.shopify.com/s/files/1/1020/2690/3830/files/Main.jpg?v=1793753602",
+      "altText": "The top and bottom view of a snowboard. The top has view is turquoise and black with graphics of\n        trees. The bottom view is turquoise with the word hydrogen written in cursive.",
+      "width": 1024,
+      "height": 1024
+    },
+    "priceRange": {
+      "minVariantPrice": {
+        "amount": "885.95",
+        "currencyCode": "USD"
       }
     }
   }

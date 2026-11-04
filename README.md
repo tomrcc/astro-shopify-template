@@ -57,9 +57,9 @@ Open the URL `astro dev` prints. It runs in the background; stop it with `npx as
 Pages to look at:
 
 - `/`: a page built from sections
-- `/products/puffer-jacket/`: a product page with a product story
-- `/products/beanie/`: a product page without one
-- `/collections/featured/`: a collection with an intro
+- `/products/the-complete-snowboard/`: a product page with a product story
+- `/products/the-multi-managed-snowboard/`: a product page without one
+- `/collections/all/`: a collection with an intro
 
 ### 2. Push it to a git repository
 
@@ -135,7 +135,7 @@ The **Featured products** and **Collection grid** sections render from the same 
 ## Code map
 
 - `src/lib/shopify/`: the Storefront API client, queries, types, the cart and image helpers.
-- `src/pages/products/[handle].astro` and `src/pages/collections/[handle].astro`: one page per Shopify product and collection.
+- `src/pages/products/[handle].astro` and `src/pages/collections/[handle].astro`: one page per Shopify product and collection, plus `/collections/all/`, which lists every product. Shopify's API has no such collection, so `getAllCollections` in `src/lib/shopify/catalog.ts` and the sync both add it. A Shopify collection with the handle `all` replaces it.
 - `src/pages/[...slug].astro`: pages from `src/content/pages/`.
 - `src/components/server/LivePrice.astro`: the live price island. Its CDN headers are Netlify's; see the hosting guide for others.
 - `src/components/shop/`: the product form, cart drawer, price and product card.

@@ -1,4 +1,4 @@
-# Field & Thread website
+# Ridgeline Boards website
 
 The shop's products, prices, stock and checkout live in Shopify. Everything around them is edited here: pages, the stories on product pages, collection intros, navigation and the announcement bar.
 
@@ -23,7 +23,7 @@ The product's title, photos, price, options and description come from Shopify. C
 
 ## Collection intros
 
-A collection intro adds a heading, intro text, an image and sections to a collection's page. Which products appear, and in what order, is set in Shopify admin.
+A collection intro adds a heading, intro text, an image and sections to a collection's page. Which products appear, and in what order, is set in Shopify admin. The **All products** page lists every product in Shopify.
 
 ## Site settings
 

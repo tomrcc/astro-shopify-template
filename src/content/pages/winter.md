@@ -1,30 +1,30 @@
 ---
 _schema: page_builder
 title: The winter edit
-description: Layers for cold mornings and long walks.
+description: Boards for cold mornings and deep days.
 content_blocks:
   - _type: hero
     heading: The winter edit
-    subheading: Warm layers that pack small and last for seasons.
+    subheading: Boards that handle ice, crud and powder, and last for seasons.
     image: /images/winter.svg
     image_alt: A green mountain under a winter sun
     button:
       label: Shop the edit
-      url: /collections/featured/
+      url: /collections/all/
   - _type: featured_products
-    heading: Layer up
+    heading: Gear up
     intro:
     products:
-      - puffer-jacket
-      - light-puffer
-      - half-zip
-      - beanie
-      - sweatpants
+      - the-complete-snowboard
+      - the-collection-snowboard-liquid
+      - the-collection-snowboard-hydrogen
+      - the-collection-snowboard-oxygen
+      - the-compare-at-price-snowboard
     button:
       label:
       url:
   - _type: testimonial
-    quote: Light enough to stuff in a bag, warm enough for the school run at 7am.
+    quote: Light enough to carry up the skin track, stiff enough to hold an edge on the way down.
     author: Sam K.
-    role: Wellington
+    role: Wānaka
 ---

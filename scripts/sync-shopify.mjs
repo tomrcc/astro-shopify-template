@@ -77,6 +77,11 @@ try {
 		cursor = data.products.pageInfo.hasNextPage ? data.products.pageInfo.endCursor : null;
 	} while (cursor);
 
+	// Matches ALL_PRODUCTS in src/lib/shopify/catalog.ts, so pickers and the collection grid can use it.
+	if (!collections.some((collection) => collection.handle === 'all')) {
+		collections.unshift({ handle: 'all', title: 'All products', image: null });
+	}
+
 	write('src/data/shopify/products.json', products);
 	write('src/data/shopify/collections.json', collections);
 } catch (error) {
