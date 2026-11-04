@@ -75,11 +75,16 @@ Check the live site: product prices load, and adding to the cart opens the drawe
 
 ### 4. Create the CloudCannon site
 
-1. In CloudCannon, create a site from the same repository.
-2. `.cloudcannon/initial-site-settings.json` sets the build command, the `dist` output, the Node version and `PUBLIC_EDITOR_BUILD=true` when the site is created. For an existing site, set these in the site's build settings.
-3. Once the build finishes, open a page in the Visual Editor.
+1. In CloudCannon, create a site and connect your git provider when asked. Choose the repository and the branch Netlify deploys from. `npx @cloudcannon/cli sites create` does the same from the command line.
+2. `.cloudcannon/initial-site-settings.json` sets the build command, the `dist` output, the Node version and `PUBLIC_EDITOR_BUILD=true` when the site is created. CloudCannon reads it only then. For an existing site, set these in **Site Settings > Builds > Configuration**, or with `npx @cloudcannon/cli sites update-build-config`.
+3. Once the build finishes, check:
+   - the build log shows the Shopify sync running before `astro build`
+   - `/` opens in the Visual Editor
+   - Shopify-owned parts of product pages show a purple icon in the Visual Editor
+   - the **Product** field on a new product story lists the mock.shop products
+4. Invite your editors to the site.
 
-Saving in CloudCannon commits to the repository, and Netlify builds production from that push.
+Saving in CloudCannon commits to the branch, and Netlify builds production from that push, so every save goes live. To review changes first, connect CloudCannon to a staging branch and publish to the production branch from there.
 
 ### 5. Use your own Shopify store
 
@@ -88,6 +93,8 @@ Saving in CloudCannon commits to the repository, and Netlify builds production f
    - `PUBLIC_SHOPIFY_STORE_DOMAIN`: such as `your-store.myshopify.com`.
    - `PUBLIC_SHOPIFY_STOREFRONT_TOKEN`: the public access token. It's designed to be public and reaches the browser for cart calls. The build needs it because Shopify limits tokenless requests to a query cost of 1,000, and the catalog queries cost more.
    - `PUBLIC_SHOPIFY_API_VERSION`: defaults to `2026-10`. Shopify supports each version for a year.
+
+   On CloudCannon they go under **Site Settings > Builds**, next to `PUBLIC_EDITOR_BUILD`. They only apply at build time, so rebuild after changing them. With the CLI, end the list with `...` to keep the existing variables: `--environment-variables "PUBLIC_SHOPIFY_STORE_DOMAIN=your-store.myshopify.com,..."`. Without it, the list replaces them and removes `PUBLIC_EDITOR_BUILD`.
 3. Run `npm run sync:shopify` and commit `src/data/shopify/`.
 4. Replace the handles in the sample content with your own:
    - the `product` field in `src/content/product-stories/`
@@ -95,12 +102,13 @@ Saving in CloudCannon commits to the repository, and Netlify builds production f
    - `products` and `collections` in the page sections
    - collection links in `src/data/site.json`
 5. Set `site` in `astro.config.mjs` to the production URL.
+6. Rewrite `.cloudcannon/README.md`, the guide editors see in CloudCannon, for your store.
 
 ### 6. Rebuild when the catalog changes
 
 Pages hold the catalog as it was at the last build. Add webhooks in Shopify admin (**Settings > Notifications > Webhooks**) for product and collection create, update and delete. Point each one at a Netlify build hook (under **Build hooks** in the build and deploy settings).
 
-The editor's preview picks up catalog changes the next time CloudCannon builds, which happens on every save.
+The editor's preview picks up catalog changes the next time CloudCannon builds, which happens on every save. The product and collection pickers don't: they read the committed `src/data/shopify/`, and a build never commits. Run `npm run sync:shopify` and commit the result to list new products in them.
 
 A busy store can fire many webhooks in a few minutes, and each one starts a build. To batch them, put a small function in front of the build hook that waits a few minutes before triggering it.
 
@@ -120,11 +128,20 @@ On the CloudCannon build, read through `src/lib/editor-build.ts`:
 
 - The price renders from the build's catalog instead of the `LivePrice` server island.
 - Adding to the cart does nothing.
-- `<EditorNote>` marks parts that aren't edited in CloudCannon with a small icon that explains where they come from. It renders nothing outside the editor build.
+- `<EditorNote>` marks parts that aren't edited in CloudCannon with a small icon that explains where they come from. It renders nothing outside the editor build, and stays hidden on the editor build's own URL until the Visual Editor sets `window.inEditorMode`.
 
 The flag exists because the Visual Editor's preview has no server. Without it, the island's request would fail inside the editor.
 
 Keep editor-owned pages prerendered. On-demand routes don't exist in the static build, so CloudCannon can't open them.
+
+To try the CloudCannon setup without pushing, build the editor build and serve it with CloudCannon's local editor:
+
+```sh
+PUBLIC_EDITOR_BUILD=true npm run build
+npx @cloudcannon/cli dev dist
+```
+
+It doesn't rebuild on its own. Run the build again after each change to see it in the preview.
 
 ## Picking products in CloudCannon
 

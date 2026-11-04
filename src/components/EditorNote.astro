@@ -17,12 +17,16 @@ const { note } = Astro.props;
 		<span class="editor-note-text" role="tooltip">{note || "This part isn't edited in CloudCannon."}</span>
 		{/* Inline so the badge's CSS and JS ship only in the editor build. */}
 		<style is:inline>
-			:has(> .editor-note) {
+			[data-editor-mode] :has(> .editor-note) {
 				position: relative;
 				outline: 1px dashed rgb(124 58 237 / 0.45);
 				outline-offset: 6px;
 			}
 			.editor-note {
+				display: none;
+			}
+			[data-editor-mode] .editor-note {
+				display: block;
 				position: absolute;
 				top: -0.75rem;
 				right: -0.75rem;
@@ -61,6 +65,15 @@ const { note } = Astro.props;
 		</style>
 		<script is:inline>
 			(() => {
+				// The editor build is also served outside the Visual Editor, where notes stay hidden.
+				// inEditorMode can be set after this runs, so check again once the page loads.
+				const markEditor = () => {
+					if (window.inEditorMode) document.documentElement.setAttribute('data-editor-mode', '');
+				};
+				markEditor();
+				document.addEventListener('DOMContentLoaded', markEditor);
+				window.addEventListener('load', markEditor);
+
 				const button = document.currentScript.parentElement.querySelector('.editor-note-icon');
 				button.addEventListener('click', () => {
 					button.setAttribute('aria-expanded', String(button.getAttribute('aria-expanded') !== 'true'));
