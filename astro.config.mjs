@@ -4,7 +4,7 @@ import netlify from '@astrojs/netlify';
 import editableRegions from '@cloudcannon/editable-regions/astro-integration';
 
 export default defineConfig({
-	site: 'https://example.com',
+	site: 'https://astroshopifytemplate.netlify.app',
 	adapter: netlify(),
 	integrations: [editableRegions()],
 	env: {
