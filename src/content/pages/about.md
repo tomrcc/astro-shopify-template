@@ -1,29 +1,29 @@
 ---
 _schema: page_builder
 title: Our story
-description: Why Ridgeline Boards makes fewer, better snowboards.
+description: Why Sunbeam Brew Co. sells fewer, better things for brewing at home.
 content_blocks:
   - _type: hero
-    heading: We started with one board.
-    subheading: Ten years later, it's still the thing we're proudest of.
-    image: /images/workshop.svg
-    image_alt: A spool of thread on a cutting table
+    heading: It started with one good cup.
+    subheading: A pour-over at a roadside café, and a kitchen at home that couldn't match it.
+    image: /images/cup.svg
+    image_alt: A cup of black coffee on a saucer, seen from above
     button:
       label:
       url:
   - _type: text
     heading: What we believe
     content: |-
-      A good board should outlast the trend that sold it. We choose tougher cores, reinforce the edges that wear first, and repair what we can.
+      Great coffee at home doesn't need a machine with a manual. It needs fresh beans, a few well-made tools and a little patience.
 
-      We publish what goes into each board so you know what you're buying.
+      We stock gear we use every morning, and we write about how to get the most from it.
   - _type: image_text
-    heading: The core comes first
-    content: Our wood cores are milled and laid up in small batches. It costs more and takes longer, and you can feel the difference.
-    image: /images/winter.svg
-    image_alt: A green mountain under a winter sun
+    heading: Made to be used every day
+    content: Our ceramics are thrown and glazed in small batches. Each piece is a little different, and all of them go in the dishwasher.
+    image: /images/pour-over.svg
+    image_alt: A ceramic pour-over cone dripping into a glass carafe
     image_side: right
     button:
-      label: Shop the Hydrogen series
-      url: /collections/hydrogen/
+      label: Shop morning rituals
+      url: /collections/artisanal-morning-rituals/
 ---

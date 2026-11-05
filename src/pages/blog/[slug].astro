@@ -1,0 +1,37 @@
+---
+import { getCollection, render } from 'astro:content';
+import Base from '../../layouts/Base.astro';
+import FeaturedProducts from '../../components/blocks/FeaturedProducts.astro';
+import { editorBuild } from '../../lib/editor-build';
+import { formatDate } from '../../lib/dates';
+
+export async function getStaticPaths() {
+	const posts = await getCollection('posts');
+	return posts.map((post) => ({ params: { slug: post.id }, props: { post } }));
+}
+
+const { post } = Astro.props;
+const { data } = post;
+const { Content } = await render(post);
+---
+<Base title={data.title} description={data.description} image={data.image}>
+	<article class="section post">
+		<p class="post-meta">
+			<time datetime={data.date.toISOString()}>{formatDate(data.date)}</time>
+			{data.author && <span data-editable="text" data-prop="author">{data.author}</span>}
+		</p>
+		<h1 data-editable="text" data-prop="title">{data.title}</h1>
+		{data.image && (
+			<img class="post-image" src={data.image} alt={data.image_alt ?? ''} data-editable="image" data-prop-src="image" data-prop-alt="image_alt" />
+		)}
+		<div class="prose" data-editable="text" data-prop="@content">
+			<Content />
+		</div>
+	</article>
+	{/* Shown empty in the editor build so editors can find it and pick products. */}
+	{(data.shop.products.length > 0 || editorBuild) && (
+		<div data-editable="component" data-component="featured_products" data-prop="shop">
+			<FeaturedProducts heading={data.shop.heading} products={data.shop.products} button={{}} />
+		</div>
+	)}
+</Base>

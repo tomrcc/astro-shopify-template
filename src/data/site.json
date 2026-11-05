@@ -1,16 +1,18 @@
 {
-  "title": "Ridgeline Boards",
-  "description": "Snowboards made to be ridden hard and kept for years.",
+  "title": "Sunbeam Brew Co.",
+  "description": "Brewing gear, ceramics and fresh coffee for slow mornings at home.",
   "nav": [
     { "label": "Shop all", "url": "/collections/all/" },
-    { "label": "The full range", "url": "/collections/automated-collection/" },
-    { "label": "Hydrogen series", "url": "/collections/hydrogen/" },
+    { "label": "Morning rituals", "url": "/collections/artisanal-morning-rituals/" },
+    { "label": "Home brewing", "url": "/collections/precision-home-brewing/" },
+    { "label": "Journal", "url": "/blog/" },
     { "label": "Our story", "url": "/about/" }
   ],
-  "footer_text": "Ridgeline Boards is a demo store. Products come from Shopify; everything else is edited in CloudCannon.",
+  "footer_text": "Sunbeam Brew Co. is a demo store. Products come from Shopify; everything else is edited in CloudCannon.",
   "footer_links": [
     { "label": "About", "url": "/about/" },
-    { "label": "Care guide", "url": "/care-guide/" },
-    { "label": "Winter campaign", "url": "/winter/" }
+    { "label": "Journal", "url": "/blog/" },
+    { "label": "Shipping and returns", "url": "/shipping-and-returns/" },
+    { "label": "Gift guide", "url": "/gift-guide/" }
   ]
 }

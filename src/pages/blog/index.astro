@@ -1,0 +1,18 @@
+---
+import { getCollection } from 'astro:content';
+import Base from '../../layouts/Base.astro';
+import PostCard from '../../components/PostCard.astro';
+
+const posts = (await getCollection('posts')).sort((a, b) => b.data.date.getTime() - a.data.date.getTime());
+---
+<Base title="Journal" description="Brew guides, care tips and the stories behind what we stock.">
+	<section class="section">
+		<h1>Journal</h1>
+		<p class="section-intro">Brew guides, care tips and the stories behind what we stock.</p>
+		<ul class="post-grid">
+			{posts.map((post) => (
+				<li><PostCard post={post} /></li>
+			))}
+		</ul>
+	</section>
+</Base>

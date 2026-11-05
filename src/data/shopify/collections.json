@@ -3,35 +3,30 @@
     "handle": "all",
     "title": "All products",
     "image": {
-      "url": "https://cdn.shopify.com/s/files/1/1020/2690/3830/files/pexels-enzo-elgalgo.jpg?v=1793756571",
+      "url": "https://cdn.shopify.com/s/files/1/0926/4031/3366/files/41e0d0363f6c2848d4b8f5ad75890d78.png?v=13151633",
+      "altText": "A 'Clay' colored ceramic mug positioned at the center of the frame, photographed with a 50mm lens against a clean...",
+      "width": 768,
+      "height": 1344
+    }
+  },
+  {
+    "handle": "artisanal-morning-rituals",
+    "title": "Artisanal Morning Rituals",
+    "image": {
+      "url": "https://cdn.shopify.com/s/files/1/0926/4031/3366/files/6f15e691b54eb3e10a0ee8c29e2b5725.png?v=14994440",
       "altText": null,
-      "width": 1920,
-      "height": 1280
+      "width": null,
+      "height": null
     }
   },
   {
-    "handle": "automated-collection",
-    "title": "Automated Collection",
+    "handle": "precision-home-brewing",
+    "title": "Precision Home Brewing",
     "image": {
-      "url": "https://cdn.shopify.com/s/files/1/1020/2690/3830/files/Main_b13ad453-477c-4ed1-9b43-81f3345adfd6.jpg?v=1793753605",
-      "altText": "Top and bottom view of a snowboard. The top view shows a stylized scene of water, trees, mountains, sky and a moon in blue colours. The bottom view has a blue liquid, drippy background with the text \"liquid\" in a stylized script typeface.",
-      "width": 1600,
-      "height": 1600
-    }
-  },
-  {
-    "handle": "frontpage",
-    "title": "Home page",
-    "image": null
-  },
-  {
-    "handle": "hydrogen",
-    "title": "Hydrogen",
-    "image": {
-      "url": "https://cdn.shopify.com/s/files/1/1020/2690/3830/files/Main_d624f226-0a89-4fe1-b333-0d1548b43c06.jpg?v=1793753603",
-      "altText": "Top and bottom view of a snowboard. The top view shows a stylized scene of trees, mountains, sky and a sun in red colours. The bottom view has blue wavy lines in the background with the text \"Oxygen\" in a stylized script typeface.",
-      "width": 1600,
-      "height": 1600
+      "url": "https://cdn.shopify.com/s/files/1/0926/5994/1398/files/5b94b26e9e9d7deb5e0903a8b7922465.png?v=15048110",
+      "altText": null,
+      "width": null,
+      "height": null
     }
   }
 ]

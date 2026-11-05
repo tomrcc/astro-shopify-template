@@ -6,41 +6,46 @@ import ProductCard from '../../components/shop/ProductCard.astro';
 import EditorNote from '../../components/EditorNote.astro';
 import { ALL_PRODUCTS, getAllCollections } from '../../lib/shopify/catalog';
 import { markdown } from '../../lib/markdown';
+import { editorBuild } from '../../lib/editor-build';
 
 export async function getStaticPaths() {
-	const [collections, intros] = await Promise.all([getAllCollections(), getCollection('collection-intros')]);
+	const [collections, pages] = await Promise.all([getAllCollections(), getCollection('collection-pages')]);
 	return collections.map((collection) => ({
 		params: { handle: collection.handle },
-		props: { collection, intro: intros.find((entry) => entry.data.collection === collection.handle) },
+		props: { collection, page: pages.find((entry) => entry.id === collection.handle) },
 	}));
 }
 
-const { collection, intro } = Astro.props;
-const heading = intro?.data.heading || collection.title;
+const { collection, page } = Astro.props;
+const heading = page?.data.heading || collection.title;
 ---
 <Base title={heading} description={collection.description}>
 	<section class="collection-hero">
 		<div>
-			{intro ? <h1 data-editable="text" data-prop="heading">{heading}</h1> : <h1>{heading}</h1>}
-			{intro?.data.intro && <div class="prose" data-editable="text" data-type="block" data-prop="intro" set:html={markdown(intro.data.intro)} />}
+			{page ? <h1 data-editable="text" data-prop="heading">{heading}</h1> : <h1>{heading}</h1>}
+			{page && (page.data.intro || editorBuild) && <div class="prose" data-editable="text" data-type="block" data-prop="intro" set:html={markdown(page.data.intro)} />}
 		</div>
-		{intro?.data.image && (
-			<img src={intro.data.image} alt={intro.data.image_alt ?? ''} data-editable="image" data-prop-src="image" data-prop-alt="image_alt" />
+		{page?.data.image && (
+			<img src={page.data.image} alt={page.data.image_alt ?? ''} data-editable="image" data-prop-src="image" data-prop-alt="image_alt" />
 		)}
 	</section>
 	<section class="section">
 		<div class="shopify-managed">
-			<ul class="product-grid">
-				{collection.products.nodes.map((product) => (
-					<li><ProductCard product={product} /></li>
-				))}
-			</ul>
+			{collection.products.nodes.length > 0 ? (
+				<ul class="product-grid">
+					{collection.products.nodes.map((product) => (
+						<li><ProductCard product={product} /></li>
+					))}
+				</ul>
+			) : (
+				<p class="empty-state">No products here yet. Add them in Shopify admin.</p>
+			)}
 			<EditorNote note={collection.handle === ALL_PRODUCTS.handle ? "Lists every product in Shopify, in title order." : "Which products appear, and their order, comes from this collection in Shopify admin."} />
 		</div>
 	</section>
-	{intro && (
+	{page && (
 		<div class="blocks" data-editable="array" data-prop="content_blocks" data-component-key="_type">
-			{intro.data.content_blocks.map((block) => (
+			{page.data.content_blocks.map((block) => (
 				<div data-editable="array-item" data-component={block._type}>
 					<BlockRenderer {...block} />
 				</div>

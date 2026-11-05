@@ -1,53 +1,58 @@
 ---
 _schema: page_builder
-title: Ridgeline Boards
-description: Snowboards made to be ridden hard and kept for years.
+title: Sunbeam Brew Co.
+description: Brewing gear, ceramics and fresh coffee for slow mornings at home.
 content_blocks:
   - _type: hero
-    heading: Boards for the long run.
-    subheading: Tough cores, honest construction and graphics that wear in, not out.
-    image: /images/winter.svg
-    image_alt: A green mountain under a winter sun
+    heading: Make the first cup the best part of the day.
+    subheading: Pour-over sets, hand-finished ceramics and small-batch coffee,
+      chosen for slow mornings at home.
+    image: /images/pour-over.svg
+    image_alt: A ceramic pour-over cone dripping into a glass carafe
     button:
       label: Shop the range
       url: /collections/all/
   - _type: featured_products
-    heading: This season's favourites
+    heading: Morning favourites
     intro: Picked by the team. Prices and stock come straight from the shop.
     products:
-      - the-complete-snowboard
-      - the-videographer-snowboard
-      - the-collection-snowboard-oxygen
-      - the-multi-location-snowboard
+      - terracotta-pour-over-coffee-set
+      - specialty-coffee-blend-packaging
+      - chestnut-ceramic-mug
+      - ceramic-roasted-bean-canister-airtight-seal
     button:
       label: See everything
       url: /collections/all/
   - _type: image_text
-    heading: Made slowly, on purpose
-    content: |-
-      Every board starts in a small workshop with a press and a lot of patience.
+    heading: Better coffee starts before the kettle
+    content: >-
+      Fresh beans, the right grind and a steady pour make more difference than
+      any machine.
 
-      We make fewer boards and make them well, so you can buy less.
-    image: /images/workshop.svg
-    image_alt: A spool of thread on a cutting table
+
+      Our Journal has brew guides, storage tips and the stories behind what we
+      stock.
+    image: /images/beans.svg
+    image_alt: Roasted coffee beans scattered on a dark green table
     image_side: left
     button:
-      label: Read our story
-      url: /about/
+      label: Read the Journal
+      url: /blog/
   - _type: collection_grid
     heading: Shop by collection
     collections:
       - all
-      - automated-collection
-      - hydrogen
+      - artisanal-morning-rituals
+      - precision-home-brewing
   - _type: testimonial
-    quote: Three winters in and my board still rides like new. I've stopped looking for a replacement.
+    quote: The terracotta set turned my rushed morning coffee into ten minutes I
+      actually look forward to.
     author: Mere T.
     role: Verified buyer
   - _type: cta
-    heading: The winter edit is here
-    text: Boards built for cold mornings and deep days.
+    heading: Brewing for someone else?
+    text: Our gift guide has a pick for every kind of coffee drinker.
     button:
-      label: Explore winter
-      url: /winter/
+      label: See the gift guide
+      url: /gift-guide/
 ---

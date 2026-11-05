@@ -9,7 +9,7 @@ export default defineConfig({
 	integrations: [editableRegions()],
 	env: {
 		schema: {
-			PUBLIC_SHOPIFY_STORE_DOMAIN: envField.string({ context: 'client', access: 'public', default: 'mock.shop' }),
+			PUBLIC_SHOPIFY_STORE_DOMAIN: envField.string({ context: 'client', access: 'public', default: 'coffee.mock.shop' }),
 			PUBLIC_SHOPIFY_STOREFRONT_TOKEN: envField.string({ context: 'client', access: 'public', optional: true }),
 			PUBLIC_SHOPIFY_API_VERSION: envField.string({ context: 'client', access: 'public', default: '2026-10' }),
 		},

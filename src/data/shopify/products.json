@@ -1,267 +1,136 @@
 [
   {
-    "handle": "a-whole-bear-attack",
-    "title": "A whole bear attack",
+    "handle": "ceramic-mug",
+    "title": "Ceramic Mug",
     "availableForSale": true,
     "featuredImage": {
-      "url": "https://cdn.shopify.com/s/files/1/1020/2690/3830/files/pexels-enzo-elgalgo.jpg?v=1793756571",
-      "altText": null,
-      "width": 1920,
-      "height": 1280
+      "url": "https://cdn.shopify.com/s/files/1/0926/4031/3366/files/41e0d0363f6c2848d4b8f5ad75890d78.png?v=13151633",
+      "altText": "A 'Clay' colored ceramic mug positioned at the center of the frame, photographed with a 50mm lens against a clean...",
+      "width": 768,
+      "height": 1344
     },
     "priceRange": {
       "minVariantPrice": {
-        "amount": "3.5",
+        "amount": "15.0",
         "currencyCode": "USD"
       }
     }
   },
   {
-    "handle": "gift-card",
-    "title": "Gift Card",
-    "availableForSale": false,
-    "featuredImage": {
-      "url": "https://cdn.shopify.com/s/files/1/1020/2690/3830/files/gift_card.jpg?v=1793753602",
-      "altText": "Gift card that shows text: Generated data gift card",
-      "width": 1600,
-      "height": 1600
-    },
-    "priceRange": {
-      "minVariantPrice": {
-        "amount": "10.0",
-        "currencyCode": "USD"
-      }
-    }
-  },
-  {
-    "handle": "selling-plans-ski-wax",
-    "title": "Selling Plans Ski Wax",
+    "handle": "ceramic-pour-over-coffee-dripper",
+    "title": "Ceramic Pour-Over Coffee Dripper",
     "availableForSale": true,
     "featuredImage": {
-      "url": "https://cdn.shopify.com/s/files/1/1020/2690/3830/files/snowboard_wax.jpg?v=1793753602",
-      "altText": "A bar of golden yellow wax",
-      "width": 1600,
-      "height": 1600
+      "url": "https://cdn.shopify.com/s/files/1/0926/4031/3366/files/33be3ff1cb715564f9c05474529aad13.png?v=13121328",
+      "altText": "Ceramic pour-over coffee dripper centered on a simple, textured surface in 'Earthy Clay'. The background is neutral 'Soft...",
+      "width": 768,
+      "height": 1344
     },
     "priceRange": {
       "minVariantPrice": {
-        "amount": "9.95",
+        "amount": "25.0",
         "currencyCode": "USD"
       }
     }
   },
   {
-    "handle": "the-3p-fulfilled-snowboard",
-    "title": "The 3p Fulfilled Snowboard",
+    "handle": "ceramic-roasted-bean-canister-airtight-seal",
+    "title": "Ceramic Roasted Bean Canister Airtight Seal",
     "availableForSale": true,
     "featuredImage": {
-      "url": "https://cdn.shopify.com/s/files/1/1020/2690/3830/files/Main_b9e0da7f-db89-4d41-83f0-7f417b02831d.jpg?v=1793753603",
-      "altText": "Top and bottom view of a snowboard. The top view shows 7 stacked hexagons and the bottom view\n          shows a small, centred hexagonal logo for Hydrogen.",
-      "width": 1600,
-      "height": 1600
+      "url": "https://cdn.shopify.com/s/files/1/0926/4031/3366/files/6f74c201b46f1be8ff182c74d8767baa.png?v=14679362",
+      "altText": "Ceramic roasted bean canister, Single product featured at a time on subtly textured neutral backdrops (Porcelain or light...",
+      "width": 768,
+      "height": 1344
     },
     "priceRange": {
       "minVariantPrice": {
-        "amount": "2629.95",
+        "amount": "42.0",
         "currencyCode": "USD"
       }
     }
   },
   {
-    "handle": "the-collection-snowboard-hydrogen",
-    "title": "The Collection Snowboard: Hydrogen",
+    "handle": "chestnut-ceramic-mug",
+    "title": "Chestnut Ceramic Mug",
     "availableForSale": true,
     "featuredImage": {
-      "url": "https://cdn.shopify.com/s/files/1/1020/2690/3830/files/Main_0a40b01b-5021-48c1-80d1-aa8ab4876d3d.jpg?v=1793753602",
-      "altText": "Top and bottom view of a snowboard. The top view shows stylized hydrogen bonds and the bottom view shows \"H2\" in a brush script typeface.",
-      "width": 1600,
-      "height": 1600
+      "url": "https://cdn.shopify.com/s/files/1/0926/5994/1398/files/b68672854a19990768a189c61c51c804.png?v=13060324",
+      "altText": "A centered product shot of a Chestnut ceramic mug from the Timeless Artisan collection, showcasing its rich, warm tones...",
+      "width": 768,
+      "height": 1344
     },
     "priceRange": {
       "minVariantPrice": {
-        "amount": "600.0",
+        "amount": "25.0",
         "currencyCode": "USD"
       }
     }
   },
   {
-    "handle": "the-collection-snowboard-liquid",
-    "title": "The Collection Snowboard: Liquid",
+    "handle": "double-wall-glass-coffee-mug",
+    "title": "Double Wall Glass Coffee Mug",
     "availableForSale": true,
     "featuredImage": {
-      "url": "https://cdn.shopify.com/s/files/1/1020/2690/3830/files/Main_b13ad453-477c-4ed1-9b43-81f3345adfd6.jpg?v=1793753605",
-      "altText": "Top and bottom view of a snowboard. The top view shows a stylized scene of water, trees, mountains, sky and a moon in blue colours. The bottom view has a blue liquid, drippy background with the text \"liquid\" in a stylized script typeface.",
-      "width": 1600,
-      "height": 1600
+      "url": "https://cdn.shopify.com/s/files/1/0926/4031/3366/files/6f15e691b54eb3e10a0ee8c29e2b5725.png?v=14994440",
+      "altText": "Single-origin coffee beans pack, Hero angle is 3/4 view at tabletop height—showing coffee vessels and accessories with...",
+      "width": 768,
+      "height": 1344
     },
     "priceRange": {
       "minVariantPrice": {
-        "amount": "749.95",
+        "amount": "28.0",
         "currencyCode": "USD"
       }
     }
   },
   {
-    "handle": "the-collection-snowboard-oxygen",
-    "title": "The Collection Snowboard: Oxygen",
+    "handle": "glass-pour-over-brewer-set-with-minimalist-stand",
+    "title": "Glass Pour-Over Brewer Set With Minimalist Stand",
     "availableForSale": true,
     "featuredImage": {
-      "url": "https://cdn.shopify.com/s/files/1/1020/2690/3830/files/Main_d624f226-0a89-4fe1-b333-0d1548b43c06.jpg?v=1793753603",
-      "altText": "Top and bottom view of a snowboard. The top view shows a stylized scene of trees, mountains, sky and a sun in red colours. The bottom view has blue wavy lines in the background with the text \"Oxygen\" in a stylized script typeface.",
-      "width": 1600,
-      "height": 1600
+      "url": "https://cdn.shopify.com/s/files/1/0926/5994/1398/files/5b94b26e9e9d7deb5e0903a8b7922465.png?v=15048110",
+      "altText": "Modern glass pour-over brewer set, 3/4 angle for products (beans, equipment) placed on Almond Milk or Slate surfaces with...",
+      "width": 768,
+      "height": 1344
     },
     "priceRange": {
       "minVariantPrice": {
-        "amount": "1025.0",
+        "amount": "98.0",
         "currencyCode": "USD"
       }
     }
   },
   {
-    "handle": "the-compare-at-price-snowboard",
-    "title": "The Compare at Price Snowboard",
+    "handle": "specialty-coffee-blend-packaging",
+    "title": "Specialty Coffee Blend Packaging",
     "availableForSale": true,
     "featuredImage": {
-      "url": "https://cdn.shopify.com/s/files/1/1020/2690/3830/files/snowboard_sky.jpg?v=1793753602",
-      "altText": "Top and bottom view of a snowboard. The top view shows pixelated clouds, with the top-most one being\n        the shape of the Shopify bag logo. The bottom view has a pixelated cloudy sky with blue, pink and purple\n        colours.",
-      "width": 1268,
-      "height": 1600
+      "url": "https://cdn.shopify.com/s/files/1/0926/4031/3366/files/28084168083797b4714a7c509727d7e2.png?v=13015112",
+      "altText": "A specialty coffee blend pack centered on a muted fabric background, perfectly aligned within the frame. The packaging...",
+      "width": 768,
+      "height": 1344
     },
     "priceRange": {
       "minVariantPrice": {
-        "amount": "785.95",
+        "amount": "18.99",
         "currencyCode": "USD"
       }
     }
   },
   {
-    "handle": "the-complete-snowboard",
-    "title": "The Complete Snowboard",
+    "handle": "terracotta-pour-over-coffee-set",
+    "title": "Terracotta Pour-Over Coffee Set",
     "availableForSale": true,
     "featuredImage": {
-      "url": "https://cdn.shopify.com/s/files/1/1020/2690/3830/files/Main_589fc064-24a2-4236-9eaf-13b2bd35d21d.jpg?v=1793753602",
-      "altText": "Top and bottom view of a snowboard. The top view shows abstract circles and lines in shades of\n          teal. The bottom view shows abstract circles and lines in shades of purple and blue with the text “SHOPIFY”\n          in a sans serif typeface on top.",
-      "width": 1600,
-      "height": 1600
+      "url": "https://cdn.shopify.com/s/files/1/0926/4031/3366/files/b959e9598bff494db6132f232320f292.png?v=14978686",
+      "altText": "Terracotta pour-over coffee set, Shoot product at a gentle 3/4 angle on neutral cream or weathered wood backgrounds that...",
+      "width": 768,
+      "height": 1344
     },
     "priceRange": {
       "minVariantPrice": {
-        "amount": "699.95",
-        "currencyCode": "USD"
-      }
-    }
-  },
-  {
-    "handle": "the-hidden-snowboard",
-    "title": "The Hidden Snowboard",
-    "availableForSale": true,
-    "featuredImage": {
-      "url": "https://cdn.shopify.com/s/files/1/1020/2690/3830/files/Main_c8ff0b5d-c712-429a-be00-b29bd55cbc9d.jpg?v=1793753602",
-      "altText": "The top view and bottom view of a snowboard. The top view is black with a singular peach cube.\n        The bottom view has a graphic of a stack of blocks in a gradient from light blue, to pink to peach.",
-      "width": 1600,
-      "height": 1600
-    },
-    "priceRange": {
-      "minVariantPrice": {
-        "amount": "749.95",
-        "currencyCode": "USD"
-      }
-    }
-  },
-  {
-    "handle": "the-inventory-not-tracked-snowboard",
-    "title": "The Inventory Not Tracked Snowboard",
-    "availableForSale": true,
-    "featuredImage": {
-      "url": "https://cdn.shopify.com/s/files/1/1020/2690/3830/files/snowboard_purple_hydrogen.jpg?v=1793753602",
-      "altText": "Top and bottom view of a snowboard. The top view shows a centred hexagonal logo for Hydrogen that\n          appears to radiate outwards, as well as some overlapping hexagons at the bottom. The bottom view shows an\n          abstract angular grid in purples.",
-      "width": 1268,
-      "height": 1600
-    },
-    "priceRange": {
-      "minVariantPrice": {
-        "amount": "949.95",
-        "currencyCode": "USD"
-      }
-    }
-  },
-  {
-    "handle": "the-minimal-snowboard",
-    "title": "The Minimal Snowboard",
-    "availableForSale": true,
-    "featuredImage": null,
-    "priceRange": {
-      "minVariantPrice": {
-        "amount": "885.95",
-        "currencyCode": "USD"
-      }
-    }
-  },
-  {
-    "handle": "the-multi-location-snowboard",
-    "title": "The Multi-location Snowboard",
-    "availableForSale": true,
-    "featuredImage": {
-      "url": "https://cdn.shopify.com/s/files/1/1020/2690/3830/files/Main_0a4e9096-021a-4c1e-8750-24b233166a12.jpg?v=1793753603",
-      "altText": "Top and bottom view of a snowboard. The top view shows a pixelated Shopify bag logo and a\n        pixelated character reviewing a clipboard with a questioning expression with a bright green-blue background.\n        The bottom view is a pattern of many pixel characters with a bright green-blue background.",
-      "width": 1600,
-      "height": 1600
-    },
-    "priceRange": {
-      "minVariantPrice": {
-        "amount": "729.95",
-        "currencyCode": "USD"
-      }
-    }
-  },
-  {
-    "handle": "the-multi-managed-snowboard",
-    "title": "The Multi-managed Snowboard",
-    "availableForSale": true,
-    "featuredImage": {
-      "url": "https://cdn.shopify.com/s/files/1/1020/2690/3830/files/Main_9129b69a-0c7b-4f66-b6cf-c4222f18028a.jpg?v=1793753603",
-      "altText": "Top and bottom view of a snowboard. The top view shows an illustration with varied outlined shapes\n        in black. The bottom view shows a black box character with an H pointing, and surrounded by black outlined\n        illustrative elements.",
-      "width": 1600,
-      "height": 1600
-    },
-    "priceRange": {
-      "minVariantPrice": {
-        "amount": "629.95",
-        "currencyCode": "USD"
-      }
-    }
-  },
-  {
-    "handle": "the-out-of-stock-snowboard",
-    "title": "The Out of Stock Snowboard",
-    "availableForSale": false,
-    "featuredImage": {
-      "url": "https://cdn.shopify.com/s/files/1/1020/2690/3830/files/Main_f44a9605-cd62-464d-b095-d45cdaa0d0d7.jpg?v=1793753602",
-      "altText": "Top and bottom view of a snowboard. The top view shows a toggle at the top in shades of blue and\n        yellow. The bottom view shows an abstract illustration of toggles in blues and yellows.",
-      "width": 3908,
-      "height": 3908
-    },
-    "priceRange": {
-      "minVariantPrice": {
-        "amount": "885.95",
-        "currencyCode": "USD"
-      }
-    }
-  },
-  {
-    "handle": "the-videographer-snowboard",
-    "title": "The Videographer Snowboard",
-    "availableForSale": true,
-    "featuredImage": {
-      "url": "https://cdn.shopify.com/s/files/1/1020/2690/3830/files/Main.jpg?v=1793753602",
-      "altText": "The top and bottom view of a snowboard. The top has view is turquoise and black with graphics of\n        trees. The bottom view is turquoise with the word hydrogen written in cursive.",
-      "width": 1024,
-      "height": 1024
-    },
-    "priceRange": {
-      "minVariantPrice": {
-        "amount": "885.95",
+        "amount": "82.0",
         "currencyCode": "USD"
       }
     }

@@ -5,9 +5,10 @@ A storefront for [CloudCannon](https://cloudcannon.com) where Shopify runs the s
 - **Static pages for everything:** home, landing pages, every collection and every product, built ahead of time with Astro.
 - **Live prices:** a server island checks price and stock with Shopify and is cached on the CDN for a minute at a time.
 - **Shopify's cart and checkout:** the cart drawer talks to the Storefront API from the browser and hands off to Shopify's hosted checkout.
-- **Visual editing:** pages, product stories and collection intros are editable in CloudCannon's Visual Editor.
+- **Visual editing:** pages, Journal posts, and the content around each product and collection are editable in CloudCannon's Visual Editor.
+- **Content that sells:** Journal posts pick the products they mention, and each product page lists the posts that mention it.
 
-It runs against [mock.shop](https://mock.shop), Shopify's demo store, until you point it at your own. You can run it locally, deploy it and edit it without a Shopify account.
+It runs against Sunbeam Brew Co. (`coffee.mock.shop`), one of Shopify's [mock.shop](https://mock.shop) sample catalogs, until you point it at your own store. You can run it locally, deploy it and edit it without a Shopify account.
 
 ## Who owns what
 
@@ -17,11 +18,12 @@ It runs against [mock.shop](https://mock.shop), Shopify's demo store, until you 
 | Collections and which products they contain | Shopify admin | Shopify |
 | Cart, checkout, orders, customers | Shopify | Shopify |
 | Home, about and landing pages | CloudCannon | `src/content/pages/` |
-| Product stories: a tagline and sections on a product page | CloudCannon | `src/content/product-stories/` |
-| Collection intros: heading, intro, image and sections on a collection page | CloudCannon | `src/content/collection-intros/` |
+| Journal posts, and the products each one links to | CloudCannon | `src/content/posts/` |
+| Product pages: a tagline and sections on a product page | CloudCannon | `src/content/product-pages/` |
+| Collection pages: heading, intro, image and sections on a collection page | CloudCannon | `src/content/collection-pages/` |
 | Navigation, footer, announcement bar, shop labels | CloudCannon | `src/data/*.json` |
 
-A product story or collection intro is matched to Shopify by its handle (the `product` or `collection` field). Products and collections without one still get a page.
+Each product and collection page file is named after its Shopify handle, such as `src/content/product-pages/ceramic-mug.md`. `npm run sync:shopify` creates an empty one for every product and collection that doesn't have one, so each appears in CloudCannon once the files are committed. It never edits or deletes existing files: when something leaves Shopify, the sync lists its file for you to delete.
 
 ## How it fits together
 
@@ -57,9 +59,10 @@ Open the URL `astro dev` prints. It runs in the background; stop it with `npx as
 Pages to look at:
 
 - `/`: a page built from sections
-- `/products/the-complete-snowboard/`: a product page with a product story
-- `/products/the-multi-managed-snowboard/`: a product page without one
+- `/products/terracotta-pour-over-coffee-set/`: a product page with tagline, sections and Journal posts
+- `/products/ceramic-mug/`: a product page with nothing added in CloudCannon yet
 - `/collections/all/`: a collection with an intro
+- `/blog/pour-over-at-home/`: a Journal post with products to shop
 
 ### 2. Push it to a git repository
 
@@ -81,44 +84,88 @@ Check the live site: product prices load, and adding to the cart opens the drawe
    - the build log shows the Shopify sync running before `astro build`
    - `/` opens in the Visual Editor
    - Shopify-owned parts of product pages show a purple icon in the Visual Editor
-   - the **Product** field on a new product story lists the mock.shop products
+   - the **Products** field under **Shop this post** on a Journal post lists the coffee products
 4. Invite your editors to the site.
 
 Saving in CloudCannon commits to the branch, and Netlify builds production from that push, so every save goes live. To review changes first, connect CloudCannon to a staging branch and publish to the production branch from there.
 
 ### 5. Use your own Shopify store
 
-1. In Shopify admin, install the **Headless** sales channel and create a storefront. Copy its public access token.
-2. Set these on Netlify, on CloudCannon and in a local `.env` (see `.env.example`):
+mock.shop is read-only: you can't add products or change prices and stock there. Connect your own store to do that.
+
+1. Create a store. For a test store, create a development store and don't add generated test data.
+2. Fill it with products, either way:
+   - **Start from the sample catalog.** Run `npm run catalog:csv`, then import `shopify-products.csv` under **Products > Import**. The products keep the sample handles, so the sample content keeps working. Each variant starts with 20 in stock. Then create a collection for each sample collection, with the same handle (`artisanal-morning-rituals`, `precision-home-brewing`), as an automated collection that matches products tagged with that handle.
+   - **Use your own products.** Then replace the handles in the sample content (step 7).
+3. Set up each product so the site can sell it:
+   - Publish it to the **Headless** channel. Products and collections that aren't published there don't reach the site.
+   - Either turn off inventory tracking, or track it with stock at a location that fulfils online orders. Otherwise it shows as sold out.
+4. In Shopify admin, install the **Headless** sales channel and create a storefront. Copy its public access token.
+5. Set these on Netlify, on CloudCannon and in a local `.env` (see `.env.example`):
    - `PUBLIC_SHOPIFY_STORE_DOMAIN`: such as `your-store.myshopify.com`.
    - `PUBLIC_SHOPIFY_STOREFRONT_TOKEN`: the public access token. It's designed to be public and reaches the browser for cart calls. The build needs it because Shopify limits tokenless requests to a query cost of 1,000, and the catalog queries cost more.
    - `PUBLIC_SHOPIFY_API_VERSION`: defaults to `2026-10`. Shopify supports each version for a year.
 
    On CloudCannon they go under **Site Settings > Builds**, next to `PUBLIC_EDITOR_BUILD`. They only apply at build time, so rebuild after changing them. With the CLI, end the list with `...` to keep the existing variables: `--environment-variables "PUBLIC_SHOPIFY_STORE_DOMAIN=your-store.myshopify.com,..."`. Without it, the list replaces them and removes `PUBLIC_EDITOR_BUILD`.
-3. Run `npm run sync:shopify` and commit `src/data/shopify/`.
-4. Replace the handles in the sample content with your own:
-   - the `product` field in `src/content/product-stories/`
-   - the `collection` field in `src/content/collection-intros/`
+6. Run `npm run sync:shopify` and commit `src/data/shopify/` and the new files in `src/content/product-pages/` and `src/content/collection-pages/`.
+7. If you used your own products, replace the sample content:
+   - delete the sample product and collection page files the sync lists as no longer in Shopify
+   - `shop.products` in `src/content/posts/`
    - `products` and `collections` in the page sections
    - collection links in `src/data/site.json`
-5. Set `site` in `astro.config.mjs` to the production URL.
-6. Rewrite `.cloudcannon/README.md`, the guide editors see in CloudCannon, for your store.
+8. Set `site` in `astro.config.mjs` to the production URL.
+9. Rewrite `.cloudcannon/README.md`, the guide editors see in CloudCannon, for your store.
 
-### 6. Rebuild when the catalog changes
+To go back to the sample catalog, remove the store variables everywhere, run `npm run sync:shopify` and commit.
 
-Pages hold the catalog as it was at the last build. Add webhooks in Shopify admin (**Settings > Notifications > Webhooks**) for product and collection create, update and delete. Point each one at a Netlify build hook (under **Build hooks** in the build and deploy settings).
+### 6. Keep up with catalog changes
 
-The editor's preview picks up catalog changes the next time CloudCannon builds, which happens on every save. The product and collection pickers don't: they read the committed `src/data/shopify/`, and a build never commits. Run `npm run sync:shopify` and commit the result to list new products in them.
+Shopify is the source of truth for products, and CloudCannon for the content around them. Two things follow a catalog change.
 
-A busy store can fire many webhooks in a few minutes, and each one starts a build. To batch them, put a small function in front of the build hook that waits a few minutes before triggering it.
+**The live site.** Pages hold the catalog as it was at the last build. Add webhooks in Shopify admin (**Settings > Notifications > Webhooks**) for product and collection create, update and delete, and point each one at a Netlify build hook (under **Build hooks** in the build and deploy settings). A busy store can fire many webhooks in a few minutes, and each one starts a build. To batch them, put a small function in front of the build hook that waits a few minutes before triggering it.
 
 Prices and stock between builds come from the live price island. Shopify checks them again at checkout.
+
+**CloudCannon.** The editor's preview picks up catalog changes the next time CloudCannon builds, which happens on every save. The product and collection pickers, and the list of product and collection pages, come from the repository instead. To bring them up to date, run `npm run sync:shopify` and commit the result.
+
+To do that automatically, a scheduled GitHub Action can run the sync and commit any changes. Each commit rebuilds the live site and CloudCannon, so new products appear in CloudCannon without anyone running the sync. Every catalog change, including a price change, becomes a commit, so pick a schedule that suits how often the catalog changes:
+
+```yaml
+# .github/workflows/sync-shopify.yml
+name: Sync Shopify
+on:
+  schedule:
+    - cron: '0 18 * * *'
+  workflow_dispatch:
+permissions:
+  contents: write
+jobs:
+  sync:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version-file: .nvmrc
+      - run: npm run sync:shopify
+        env:
+          PUBLIC_SHOPIFY_STORE_DOMAIN: ${{ vars.PUBLIC_SHOPIFY_STORE_DOMAIN }}
+          PUBLIC_SHOPIFY_STOREFRONT_TOKEN: ${{ vars.PUBLIC_SHOPIFY_STOREFRONT_TOKEN }}
+      - run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git add src/data/shopify src/content/product-pages src/content/collection-pages
+          git diff --cached --quiet || (git commit -m "Sync Shopify catalog" && git push)
+```
+
+The sync needs no installed dependencies. Set the two variables under the repository's **Settings > Secrets and variables > Actions > Variables**.
 
 ## Scripts
 
 - `npm run dev`: starts the dev server in the background (`npx astro dev stop` to stop it).
 - `npm run build`: syncs the Shopify catalog, then builds. Add `PUBLIC_EDITOR_BUILD=true` to build what CloudCannon builds.
-- `npm run sync:shopify`: writes product and collection summaries to `src/data/shopify/`. If Shopify can't be reached it keeps the existing files and the build carries on.
+- `npm run sync:shopify`: writes product and collection summaries to `src/data/shopify/`, and creates a page file for each new product and collection. If Shopify can't be reached it keeps the existing files and the build carries on.
+- `npm run catalog:csv`: writes the coffee.mock.shop catalog to `shopify-products.csv` for Shopify's product import. Pass another catalog's domain and a stock level to change them: `npm run catalog:csv -- books.mock.shop 50`.
 - `npx astro check`: type-checks the project.
 - `npx @cloudcannon/cli validate`: checks `cloudcannon.config.yml`, the structure files and the initial site settings.
 
@@ -154,6 +201,8 @@ The **Featured products** and **Collection grid** sections render from the same 
 - `src/lib/shopify/`: the Storefront API client, queries, types, the cart and image helpers.
 - `src/pages/products/[handle].astro` and `src/pages/collections/[handle].astro`: one page per Shopify product and collection, plus `/collections/all/`, which lists every product. Shopify's API has no such collection, so `getAllCollections` in `src/lib/shopify/catalog.ts` and the sync both add it. A Shopify collection with the handle `all` replaces it.
 - `src/pages/[...slug].astro`: pages from `src/content/pages/`.
+- `src/pages/blog/`: the Journal index and one page per post in `src/content/posts/`.
+- `scripts/mock-catalog-csv.mjs`: turns a mock.shop catalog into a Shopify import CSV.
 - `src/components/server/LivePrice.astro`: the live price island. Its CDN headers are Netlify's; see the hosting guide for others.
 - `src/components/shop/`: the product form, cart drawer, price and product card.
 - `src/components/blocks/`: page-builder sections.
@@ -176,8 +225,10 @@ The product form is a plain element wired up by a script rather than a custom el
 ## Troubleshooting
 
 - **The build fails with "Complexity exceeded":** the store has no Storefront token set. Add `PUBLIC_SHOPIFY_STOREFRONT_TOKEN`.
-- **A new product is missing from CloudCannon's picker:** run `npm run sync:shopify` and commit `src/data/shopify/`.
-- **A product story doesn't show on its product page:** check its `product` field matches the Shopify handle exactly.
+- **A product shows "Sold out" but has stock:** its stock is at a location that doesn't fulfil online orders, or it's tracked with no stock. Check the product's inventory in Shopify admin, or turn off tracking.
+- **A product or collection is missing from the site:** publish it to the **Headless** channel, then rebuild.
+- **A new product is missing from CloudCannon's pickers:** run `npm run sync:shopify` and commit `src/data/shopify/`.
+- **A product is missing from CloudCannon's Product pages:** run `npm run sync:shopify` and commit the new file in `src/content/product-pages/`.
 - **Prices don't load on the live site:** check `PUBLIC_EDITOR_BUILD` isn't set on the production host.
 - **A page won't open in the Visual Editor:** it must be prerendered and its file's collection `url` must match the built path.
 

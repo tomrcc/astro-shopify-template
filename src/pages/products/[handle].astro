@@ -4,18 +4,29 @@ import Base from '../../layouts/Base.astro';
 import BlockRenderer from '../../components/BlockRenderer.astro';
 import ProductForm from '../../components/shop/ProductForm.astro';
 import EditorNote from '../../components/EditorNote.astro';
+import PostCard from '../../components/PostCard.astro';
+import { editorBuild } from '../../lib/editor-build';
 import { getAllProducts } from '../../lib/shopify/catalog';
 import { shopifyImageAttrs } from '../../lib/shopify/image';
 
 export async function getStaticPaths() {
-	const [products, stories] = await Promise.all([getAllProducts(), getCollection('product-stories')]);
+	const [products, pages, posts] = await Promise.all([
+		getAllProducts(),
+		getCollection('product-pages'),
+		getCollection('posts'),
+	]);
+	posts.sort((a, b) => b.data.date.getTime() - a.data.date.getTime());
 	return products.map((product) => ({
 		params: { handle: product.handle },
-		props: { product, story: stories.find((entry) => entry.data.product === product.handle) },
+		props: {
+			product,
+			page: pages.find((entry) => entry.id === product.handle),
+			posts: posts.filter((post) => post.data.shop.products.includes(product.handle)),
+		},
 	}));
 }
 
-const { product, story } = Astro.props;
+const { product, page, posts } = Astro.props;
 const images = product.images.nodes;
 ---
 <Base title={product.seo.title || product.title} description={product.seo.description} image={product.featuredImage?.url}>
@@ -34,21 +45,35 @@ const images = product.images.nodes;
 		<div class="product-info">
 			<div class="shopify-managed">
 				<h1>{product.title}</h1>
-				<EditorNote note="The title, photos, price, options and description come from Shopify. Change them in Shopify admin." />
+				<EditorNote note="The title and photos come from Shopify. Change them in Shopify admin." />
 			</div>
-			{story?.data.tagline && <p class="product-tagline" data-editable="text" data-prop="tagline">{story.data.tagline}</p>}
+			{/* Shown empty in the editor build so editors have somewhere to type it. */}
+			{page && (page.data.tagline || editorBuild) && <p class="product-tagline" data-editable="text" data-prop="tagline">{page.data.tagline}</p>}
 			<ProductForm product={product} />
-			<div class="prose product-description" set:html={product.descriptionHtml} />
+			<div class="product-description">
+				<div class="prose" set:html={product.descriptionHtml} />
+				<EditorNote note="The description comes from Shopify. Change it in Shopify admin." />
+			</div>
 		</div>
 	</section>
-	{story && (
+	{page && (
 		<div class="blocks" data-editable="array" data-prop="content_blocks" data-component-key="_type">
-			{story.data.content_blocks.map((block) => (
+			{page.data.content_blocks.map((block) => (
 				<div data-editable="array-item" data-component={block._type}>
 					<BlockRenderer {...block} />
 				</div>
 			))}
 		</div>
+	)}
+	{posts.length > 0 && (
+		<section class="section">
+			<h2>From the journal</h2>
+			<ul class="post-grid">
+				{posts.slice(0, 3).map((post) => (
+					<li><PostCard post={post} /></li>
+				))}
+			</ul>
+		</section>
 	)}
 </Base>
 

@@ -31,34 +31,57 @@ collections_config:
         schema: default
         icon: article
         editor: content
-  product_stories:
-    path: src/content/product-stories
-    name: Product stories
-    description: Editorial content shown around a Shopify product.
-    url: /products/{product}/
-    icon: local_mall
+  posts:
+    path: src/content/posts
+    name: Journal
+    description: Blog posts. Each one can link products to shop below it.
+    url: /blog/[slug]/
+    icon: post_add
     _enabled_editors:
       - visual
+      - content
       - data
-    create:
-      path: '[relative_base_path]/{product}.[ext]'
     schemas:
       default:
-        path: .cloudcannon/schemas/product-story.md
-        name: Product story
-        icon: local_mall
+        path: .cloudcannon/schemas/post.md
+        name: Journal post
+        icon: post_add
     add_options:
-      - name: Product story
+      - name: Journal post
         schema: default
-        icon: local_mall
-        editor: data
+        icon: post_add
+    sort_options:
+      - key: date
+        order: desc
     preview:
       text:
-        - key: product
+        - key: title
+      subtext:
+        - key: date
+      image:
+        - key: image
     _inputs:
-      product:
-        type: select
-        comment: The Shopify product this story appears on. Run the product sync to list new products.
+      date:
+        type: date
+        instance_value: NOW
+      author:
+        type: text
+      image:
+        type: image
+      image_alt:
+        type: text
+        label: Image description
+      shop:
+        type: object
+        label: Shop this post
+        options:
+          preview:
+            icon: storefront
+      shop.heading:
+        type: text
+      shop.products:
+        type: multiselect
+        comment: Shown below the post, and the post is listed on each product's page. Run the product sync to list new products.
         options:
           values: data.shopify_products
           value_key: handle
@@ -67,52 +90,36 @@ collections_config:
               - key: title
             image:
               - key: featuredImage.url
-      tagline:
-        type: textarea
-        comment: Shown under the product title.
-  collection_intros:
-    path: src/content/collection-intros
-    name: Collection intros
-    description: Editorial content shown around a Shopify collection.
-    url: /collections/{collection}/
-    icon: category
+  product_pages:
+    path: src/content/product-pages
+    name: Product pages
+    description: Content around each Shopify product. A page appears here for every product once the Shopify sync runs.
+    url: /products/[slug]/
+    icon: local_mall
+    disable_add: true
+    disable_file_actions: true
     _enabled_editors:
       - visual
       - data
-    create:
-      path: '[relative_base_path]/{collection}.[ext]'
-    schemas:
-      default:
-        path: .cloudcannon/schemas/collection-intro.md
-        name: Collection intro
-        icon: category
-    add_options:
-      - name: Collection intro
-        schema: default
-        icon: category
-        editor: data
-    preview:
-      text:
-        - key: heading
-        - key: collection
-      subtext:
-        - key: collection
-      image:
-        - key: image
     _inputs:
-      collection:
-        type: select
-        comment: The Shopify collection this intro appears on.
-        options:
-          values: data.shopify_collections
-          value_key: handle
-          preview:
-            text:
-              - key: title
-            image:
-              - key: image.url
+      tagline:
+        type: textarea
+        comment: Shown under the product title.
+  collection_pages:
+    path: src/content/collection-pages
+    name: Collection pages
+    description: Content around each Shopify collection. A page appears here for every collection once the Shopify sync runs.
+    url: /collections/[slug]/
+    icon: category
+    disable_add: true
+    disable_file_actions: true
+    _enabled_editors:
+      - visual
+      - data
+    _inputs:
       heading:
         type: text
+        comment: Leave empty to use the collection's title from Shopify.
       intro:
         type: markdown
         options:
@@ -140,10 +147,11 @@ collection_groups:
   - heading: Content
     collections:
       - pages
+      - posts
   - heading: Shop
     collections:
-      - product_stories
-      - collection_intros
+      - product_pages
+      - collection_pages
   - heading: Settings
     collections:
       - data

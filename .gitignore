@@ -22,3 +22,6 @@ npm-debug.log*
 
 # CloudCannon schema downloads
 .cloudcannon/migration/*.schema.json
+
+# Shopify import file from scripts/mock-catalog-csv.mjs
+shopify-products.csv
