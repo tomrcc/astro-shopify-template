@@ -1,12 +1,12 @@
 // Runs at build time, in server islands and in the browser. The Storefront token is
 // public by design, so it ships to the browser for cart calls.
-const domain = import.meta.env.PUBLIC_SHOPIFY_STORE_DOMAIN || 'mock.shop';
+const domain = import.meta.env.PUBLIC_SHOPIFY_STORE_DOMAIN || 'coffee.mock.shop';
 const token = import.meta.env.PUBLIC_SHOPIFY_STOREFRONT_TOKEN;
 const version = import.meta.env.PUBLIC_SHOPIFY_API_VERSION || '2026-10';
 
-export const usingMockShop = domain === 'mock.shop';
+export const usingMockShop = domain === 'mock.shop' || domain.endsWith('.mock.shop');
 
-const endpoint = usingMockShop ? 'https://mock.shop/api' : `https://${domain}/api/${version}/graphql.json`;
+const endpoint = usingMockShop ? `https://${domain}/api` : `https://${domain}/api/${version}/graphql.json`;
 
 export async function shopify<T>(query: string, variables: Record<string, unknown> = {}): Promise<T> {
 	const headers: Record<string, string> = { 'Content-Type': 'application/json' };

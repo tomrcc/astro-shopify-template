@@ -1,5 +1,4 @@
 ---
-collection:
 heading:
 intro:
 image:

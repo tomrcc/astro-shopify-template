@@ -502,6 +502,75 @@ main {
 	font-size: 0.9rem;
 }
 
+.post-grid {
+	display: grid;
+	grid-template-columns: repeat(auto-fill, minmax(18rem, 1fr));
+	gap: 2rem;
+	margin: 2rem 0 0;
+	padding: 0;
+	list-style: none;
+}
+
+.post-card {
+	display: grid;
+	gap: 0.35rem;
+	text-decoration: none;
+}
+
+.post-card img,
+.post-image {
+	border-radius: var(--radius);
+	aspect-ratio: 16 / 9;
+	object-fit: cover;
+	width: 100%;
+}
+
+.post-card img {
+	margin-bottom: 0.5rem;
+}
+
+.post-card time,
+.post-meta {
+	color: var(--ink-soft);
+	font-size: 0.9rem;
+}
+
+.post-card-title {
+	font-family: ui-serif, Georgia, serif;
+	font-size: 1.35rem;
+	font-weight: 600;
+	line-height: 1.2;
+}
+
+.post-card-description {
+	color: var(--ink-soft);
+}
+
+.post {
+	max-width: 46rem;
+	margin: 0 auto;
+}
+
+.post-meta {
+	display: flex;
+	gap: 1rem;
+	margin: 0 0 0.75rem;
+}
+
+.post-image {
+	margin: 1.5rem 0 2rem;
+}
+
+/* Empty regions only render in the editor build, and need height to be clickable. */
+.product-tagline:empty,
+.collection-hero .prose:empty {
+	min-height: 1.6em;
+}
+
+.empty-state {
+	color: var(--ink-soft);
+}
+
 @media (min-width: 60rem) {
 	.hero,
 	.image-text,

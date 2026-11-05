@@ -15,10 +15,14 @@
 | Page builder | Testimonial | text | `quote`, `author`, `role` | — | — |
 | Page builder | Call to action | text | `heading`, `text`, `button.label` | — | — |
 | Text page | Title and body | text | `title`, `@content` | — | — |
+| Journal index | Heading and post list | none | — | Post cards come from the posts collection | Listing page; posts are edited on their own pages |
+| Journal post | Title, author, image, body | text + image | `title`, `author`, `image`/`image_alt`, `@content` | Date sidebar-only | — |
+| Journal post | Shop this post | component | `featured_products` registered component on `shop`; `heading`; cards looked up from `shop.products` handles in `src/data/shopify/products.json` | Product titles, photos and prices come from Shopify | — |
 | Product page | Title, gallery, price, options, description | none | `EditorNote` explains they come from Shopify | Shopify data | Edited in Shopify admin |
-| Product page | Tagline | text | `tagline` (product story file) | — | — |
+| Product page | Tagline | text | `tagline` (product page file; shown empty in the editor build) | — | — |
 | Product page | Add to cart button | sidebar-only | `shop.json` in the Data Editor | `add_to_cart_label`, `sold_out_label` | Label switches with the chosen variant's stock in the browser |
-| Product page | Story blocks | page builder | `content_blocks` on the product story file | — | — |
-| Collection page | Heading, intro, image | text + image | `heading`, `intro` (markdown, block), `image`/`image_alt` (collection intro file) | Heading falls back to the Shopify title when empty | — |
+| Product page | Sections | page builder | `content_blocks` on the product page file | — | — |
+| Product page | From the journal | none | — | Posts whose `shop.products` include this handle | Edited by picking products on each post |
+| Collection page | Heading, intro, image | text + image | `heading`, `intro` (markdown, block), `image`/`image_alt` (collection page file; intro shown empty in the editor build) | Heading falls back to the Shopify title when empty | — |
 | Collection page | Product grid | none | `EditorNote` explains it comes from Shopify | Shopify data | Membership and order set in Shopify admin |
-| Collection page | Blocks | page builder | `content_blocks` on the collection intro file | — | — |
+| Collection page | Blocks | page builder | `content_blocks` on the collection page file | — | — |

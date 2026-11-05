@@ -72,21 +72,19 @@ const pages = defineCollection({
 	]),
 });
 
-// Editorial content around a Shopify product, matched by its handle.
-const productStories = defineCollection({
-	loader: glob({ pattern: '*.md', base: './src/content/product-stories' }),
+// The CloudCannon half of a Shopify product or collection page. The file name is the handle,
+// and the Shopify sync creates a file for each one that doesn't have one yet.
+const productPages = defineCollection({
+	loader: glob({ pattern: '*.md', base: './src/content/product-pages' }),
 	schema: z.object({
-		product: z.string(),
 		tagline: z.string().nullish(),
 		content_blocks: z.array(blocks).default([]),
 	}),
 });
 
-// Editorial content around a Shopify collection, matched by its handle.
-const collectionIntros = defineCollection({
-	loader: glob({ pattern: '*.md', base: './src/content/collection-intros' }),
+const collectionPages = defineCollection({
+	loader: glob({ pattern: '*.md', base: './src/content/collection-pages' }),
 	schema: z.object({
-		collection: z.string(),
 		heading: z.string().nullish(),
 		intro: z.string().nullish(),
 		image: z.string().nullish(),
@@ -95,4 +93,23 @@ const collectionIntros = defineCollection({
 	}),
 });
 
-export const collections = { pages, 'product-stories': productStories, 'collection-intros': collectionIntros };
+// Nested under one key so the Visual Editor can re-render it as a featured_products component.
+const shop = z.object({
+	heading: z.string().nullish(),
+	products: z.array(z.string()).default([]),
+});
+
+const posts = defineCollection({
+	loader: glob({ pattern: '*.md', base: './src/content/posts' }),
+	schema: z.object({
+		title: z.string(),
+		description: z.string().nullish(),
+		date: z.coerce.date(),
+		author: z.string().nullish(),
+		image: z.string().nullish(),
+		image_alt: z.string().nullish(),
+		shop: shop.default({ products: [] }),
+	}),
+});
+
+export const collections = { pages, 'product-pages': productPages, 'collection-pages': collectionPages, posts };

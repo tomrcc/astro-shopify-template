@@ -1,14 +1,17 @@
 // Writes product and collection summaries to src/data/shopify/. CloudCannon's product and
 // collection pickers read them, and page-builder blocks render from them so they can
 // re-render in the Visual Editor without calling Shopify.
-import { existsSync, readFileSync, writeFileSync } from 'node:fs';
+// Also creates an empty CloudCannon page file for each product and collection without one,
+// so every Shopify page is listed in CloudCannon once the files are committed.
+import { existsSync, readdirSync, readFileSync, writeFileSync } from 'node:fs';
 
 if (existsSync('.env')) process.loadEnvFile('.env');
 
-const domain = process.env.PUBLIC_SHOPIFY_STORE_DOMAIN || 'mock.shop';
+const domain = process.env.PUBLIC_SHOPIFY_STORE_DOMAIN || 'coffee.mock.shop';
 const token = process.env.PUBLIC_SHOPIFY_STOREFRONT_TOKEN;
 const version = process.env.PUBLIC_SHOPIFY_API_VERSION || '2026-10';
-const endpoint = domain === 'mock.shop' ? 'https://mock.shop/api' : `https://${domain}/api/${version}/graphql.json`;
+const mockShop = domain === 'mock.shop' || domain.endsWith('.mock.shop');
+const endpoint = mockShop ? `https://${domain}/api` : `https://${domain}/api/${version}/graphql.json`;
 
 const query = /* GraphQL */ `
 	query Sync($cursor: String) {
@@ -92,6 +95,25 @@ function write(path, value) {
 	console.log(`sync-shopify: updated ${path}`);
 }
 
+const pageFiles = [
+	{ dir: 'src/content/product-pages', stub: '---\ntagline:\ncontent_blocks: []\n---\n' },
+	{ dir: 'src/content/collection-pages', stub: '---\nheading:\nintro:\nimage:\nimage_alt:\ncontent_blocks: []\n---\n' },
+];
+
+// Never edits or deletes existing files: they hold editors' content.
+function syncPageFiles({ dir, stub }, handles) {
+	const existing = readdirSync(dir)
+		.filter((file) => file.endsWith('.md'))
+		.map((file) => file.slice(0, -3));
+	for (const handle of handles) {
+		if (existing.includes(handle)) continue;
+		writeFileSync(`${dir}/${handle}.md`, stub);
+		console.log(`sync-shopify: created ${dir}/${handle}.md`);
+	}
+	const orphans = existing.filter((handle) => !handles.includes(handle));
+	if (orphans.length) console.warn(`sync-shopify: no longer in Shopify, delete if unwanted: ${orphans.map((handle) => `${dir}/${handle}.md`).join(', ')}`);
+}
+
 try {
 	const products = [];
 	let collections = [];
@@ -117,6 +139,8 @@ try {
 
 	write('src/data/shopify/products.json', products);
 	write('src/data/shopify/collections.json', collections);
+	syncPageFiles(pageFiles[0], products.map((product) => product.handle));
+	syncPageFiles(pageFiles[1], collections.map((collection) => collection.handle));
 } catch (error) {
 	// The committed files still serve the pickers, so a failed sync doesn't stop the build.
 	console.warn(`sync-shopify: kept the existing files. ${error.message}`);

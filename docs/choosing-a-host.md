@@ -46,7 +46,7 @@ Use `@astrojs/node` behind a CDN such as CloudFront. The static output is `dist/
 
 ## When to render product pages on demand
 
-This template builds every product page ahead of time. It fetches 100 products per Shopify request, so a few thousand products need only a few dozen requests. The 29 mock.shop products build in about two seconds. Consider rendering product and collection pages on request instead when:
+This template builds every product page ahead of time. It fetches 100 products per Shopify request, so a few thousand products need only a few dozen requests. The 8 sample products build in about two seconds. Consider rendering product and collection pages on request instead when:
 
 - the catalog runs to tens of thousands of products, or
 - products change so often that webhooks would rebuild the site all day.

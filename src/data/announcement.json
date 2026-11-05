@@ -1,8 +1,8 @@
 {
   "enabled": true,
-  "text": "Free shipping on orders over $100",
+  "text": "Free shipping on orders over $60",
   "link": {
-    "label": "See the winter edit",
-    "url": "/winter/"
+    "label": "See the gift guide",
+    "url": "/gift-guide/"
   }
 }

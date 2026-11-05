@@ -9,6 +9,7 @@
   "scripts": {
     "dev": "astro dev",
     "sync:shopify": "node scripts/sync-shopify.mjs",
+    "catalog:csv": "node scripts/mock-catalog-csv.mjs",
     "prebuild": "node scripts/sync-shopify.mjs",
     "build": "astro build",
     "preview": "astro preview",

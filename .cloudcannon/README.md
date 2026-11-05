@@ -1,12 +1,13 @@
-# Ridgeline Boards website
+# Sunbeam Brew Co. website
 
-The shop's products, prices, stock and checkout live in Shopify. Everything around them is edited here: pages, the stories on product pages, collection intros, navigation and the announcement bar.
+The shop's products, prices, stock and checkout live in Shopify. Everything around them is edited here: pages, Journal posts, the content around each product and collection, navigation and the announcement bar.
 
 ## Quick links
 
 - [Pages](cloudcannon:collections/pages)
-- [Product stories](cloudcannon:collections/product_stories)
-- [Collection intros](cloudcannon:collections/collection_intros)
+- [Journal](cloudcannon:collections/posts)
+- [Product pages](cloudcannon:collections/product_pages)
+- [Collection pages](cloudcannon:collections/collection_pages)
 - [Site settings](cloudcannon:collections/data)
 
 ## Pages
@@ -15,15 +16,25 @@ Most pages are built from sections. Open a page in the Visual Editor, click any 
 
 The **Featured products** and **Collection grid** sections let you pick products and collections from Shopify. Their titles, photos and prices come from Shopify.
 
-## Product stories
+## Journal
 
-A product story adds a tagline and sections to a product's page. To add one, click **+ Add**, choose the product, and save. The story then appears on that product's page, where you can edit it in the Visual Editor.
+Journal posts are articles: brew guides, care tips and stories. To write one, click **+ Add**, then edit it in the Visual Editor.
 
-The product's title, photos, price, options and description come from Shopify. Change those in Shopify admin.
+Under **Shop this post**, pick the products the post mentions. They're shown below the post, and the post is listed under **From the journal** on each product's page.
 
-## Collection intros
+## Product pages
 
-A collection intro adds a heading, intro text, an image and sections to a collection's page. Which products appear, and in what order, is set in Shopify admin. The **All products** page lists every product in Shopify.
+Every product in Shopify has a page here. Open one in the Visual Editor to add a tagline under the product's title and sections below it.
+
+The product's title, photos, price, options and description come from Shopify, and are marked with a purple icon. Change those in Shopify admin.
+
+New products appear here after the next catalog sync. If one is missing, ask your developer to run it.
+
+## Collection pages
+
+Every collection in Shopify has a page here. Add a heading, intro text, an image and sections. Leave the heading empty to use the collection's title from Shopify.
+
+Which products appear, and in what order, is set in Shopify admin. The **All products** page lists every product in Shopify.
 
 ## Site settings
 

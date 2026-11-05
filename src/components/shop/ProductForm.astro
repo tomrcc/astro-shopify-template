@@ -36,19 +36,24 @@ const selected = (name: string) => initial.selectedOptions.find((option) => opti
 			</LivePrice>
 		)}
 	</div>
-	{options.map((option) => (
-		<fieldset class="option">
-			<legend>{option.name}</legend>
-			<div class="option-values">
-				{option.optionValues.map((value) => (
-					<label>
-						<input type="radio" name={option.name} value={value.name} checked={selected(option.name) === value.name} />
-						<span>{value.name}</span>
-					</label>
-				))}
-			</div>
-		</fieldset>
-	))}
+	{options.length > 0 && (
+		<div class="product-options">
+			{options.map((option) => (
+				<fieldset class="option">
+					<legend>{option.name}</legend>
+					<div class="option-values">
+						{option.optionValues.map((value) => (
+							<label>
+								<input type="radio" name={option.name} value={value.name} checked={selected(option.name) === value.name} />
+								<span>{value.name}</span>
+							</label>
+						))}
+					</div>
+				</fieldset>
+			))}
+			<EditorNote note="Options and variants come from Shopify. Change them in Shopify admin." />
+		</div>
+	)}
 	<button class="button add-to-cart" type="button" data-add disabled={!initial.availableForSale} data-variant-id={initial.id}>
 		{initial.availableForSale ? shop.add_to_cart_label : shop.sold_out_label}
 	</button>
