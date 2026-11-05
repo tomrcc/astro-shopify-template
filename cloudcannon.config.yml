@@ -97,6 +97,7 @@ collections_config:
     url: /products/[slug]/
     icon: local_mall
     disable_add: true
+    disable_add_folder: true
     disable_file_actions: true
     _enabled_editors:
       - visual
@@ -112,6 +113,7 @@ collections_config:
     url: /collections/[slug]/
     icon: category
     disable_add: true
+    disable_add_folder: true
     disable_file_actions: true
     _enabled_editors:
       - visual
@@ -139,6 +141,7 @@ collections_config:
       - '*.json'
     disable_url: true
     disable_add: true
+    disable_add_folder: true
     disable_file_actions: true
     _enabled_editors:
       - data
