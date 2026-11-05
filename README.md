@@ -91,30 +91,29 @@ Saving in CloudCannon commits to the branch, and Netlify builds production from 
 
 ### 5. Use your own Shopify store
 
-mock.shop is read-only: you can't add products or change prices and stock there. Connect your own store to do that.
+mock.shop is read-only: you can't add products or change prices and stock there. Connect your own store to do that. To try it out, a development store with the sample catalog keeps the sample content working, and gives you full control over products, prices and stock.
 
-1. Create a store. For a test store, create a development store and don't add generated test data.
-2. Fill it with products, either way:
-   - **Start from the sample catalog.** Run `npm run catalog:csv`, then import `shopify-products.csv` under **Products > Import**. The products keep the sample handles, so the sample content keeps working. Each variant starts with 20 in stock. Then create a collection for each sample collection, with the same handle (`artisanal-morning-rituals`, `precision-home-brewing`), as an automated collection that matches products tagged with that handle.
-   - **Use your own products.** Then replace the handles in the sample content (step 7).
-3. Set up each product so the site can sell it:
-   - Publish it to the **Headless** channel. Products and collections that aren't published there don't reach the site.
-   - Either turn off inventory tracking, or track it with stock at a location that fulfils online orders. Otherwise it shows as sold out.
-4. In Shopify admin, install the **Headless** sales channel and create a storefront. Copy its public access token.
-5. Set these on Netlify, on CloudCannon and in a local `.env` (see `.env.example`):
-   - `PUBLIC_SHOPIFY_STORE_DOMAIN`: such as `your-store.myshopify.com`.
-   - `PUBLIC_SHOPIFY_STOREFRONT_TOKEN`: the public access token. It's designed to be public and reaches the browser for cart calls. The build needs it because Shopify limits tokenless requests to a query cost of 1,000, and the catalog queries cost more.
-   - `PUBLIC_SHOPIFY_API_VERSION`: defaults to `2026-10`. Shopify supports each version for a year.
+1. **Create the store.** For a test store, create a development store and don't add generated test data. The test data adds a warehouse location of its own, and with a second location the import below can't set stock, and products can show as sold out on the site.
+2. **Add the Headless channel.** In Shopify admin, install the **Headless** sales channel and create a storefront. Under its Storefront API settings, copy the public access token. Don't use the private token: it must never reach the browser.
+3. **Add products,** either way:
+   - **The sample catalog.** Run `npm run catalog:csv`, then import `shopify-products.csv` under **Products > Import**. It has the 8 sample products under the sample handles, so the sample content keeps working. Each variant starts with 20 in stock. Check one product's inventory after the import: if it shows 0, the store has more than one location (see step 1), so set stock under **Products > Inventory**.
+   - **Your own products.** Then replace the sample content's handles (item 8).
+4. **Add collections.** For the sample catalog, create two automated collections, each matching products whose tag equals its handle: **Artisanal Morning Rituals** (`artisanal-morning-rituals`) and **Precision Home Brewing** (`precision-home-brewing`). Check each handle under the collection's search engine listing.
+5. **Publish to Headless.** Add every product and collection to the **Headless** sales channel. Anything not published there doesn't reach the site.
+6. **Allow test checkouts.** Turn on test payments under **Settings > Payments**, and make sure **Settings > Shipping and delivery** has a rate, so a test order can reach the end of checkout.
+7. **Connect the site.** Set these in a local `.env` (see `.env.example`), and on Netlify and CloudCannon:
+   - `PUBLIC_SHOPIFY_STORE_DOMAIN`: the store's `.myshopify.com` domain, shown under **Settings > Domains**.
+   - `PUBLIC_SHOPIFY_STOREFRONT_TOKEN`: the public access token from item 2. It's designed to be public and reaches the browser for cart calls. The build needs it because Shopify limits tokenless requests to a query cost of 1,000, and the catalog queries cost more.
+   - `PUBLIC_SHOPIFY_API_VERSION`: optional, defaults to `2026-10`. Shopify supports each version for a year.
 
    On CloudCannon they go under **Site Settings > Builds**, next to `PUBLIC_EDITOR_BUILD`. They only apply at build time, so rebuild after changing them. With the CLI, end the list with `...` to keep the existing variables: `--environment-variables "PUBLIC_SHOPIFY_STORE_DOMAIN=your-store.myshopify.com,..."`. Without it, the list replaces them and removes `PUBLIC_EDITOR_BUILD`.
-6. Run `npm run sync:shopify` and commit `src/data/shopify/` and the new files in `src/content/product-pages/` and `src/content/collection-pages/`.
-7. If you used your own products, replace the sample content:
+8. **Sync and commit.** Run `npm run sync:shopify`. With the sample catalog, the only changes are image URLs. Commit `src/data/shopify/` and any new files in `src/content/product-pages/` and `src/content/collection-pages/`. With your own products, also replace the sample content:
    - delete the sample product and collection page files the sync lists as no longer in Shopify
    - `shop.products` in `src/content/posts/`
    - `products` and `collections` in the page sections
    - collection links in `src/data/site.json`
-8. Set `site` in `astro.config.mjs` to the production URL.
-9. Rewrite `.cloudcannon/README.md`, the guide editors see in CloudCannon, for your store.
+9. **Check it locally.** Run `npm run dev`. Product prices load, and a test order goes through checkout. Change a price or stock level in Shopify: the product page shows it within a minute, without a rebuild.
+10. **Finish up.** Set `site` in `astro.config.mjs` to the production URL, and rewrite `.cloudcannon/README.md`, the guide editors see in CloudCannon, for your store.
 
 To go back to the sample catalog, remove the store variables everywhere, run `npm run sync:shopify` and commit.
 
@@ -225,7 +224,8 @@ The product form is a plain element wired up by a script rather than a custom el
 ## Troubleshooting
 
 - **The build fails with "Complexity exceeded":** the store has no Storefront token set. Add `PUBLIC_SHOPIFY_STOREFRONT_TOKEN`.
-- **A product shows "Sold out" but has stock:** its stock is at a location that doesn't fulfil online orders, or it's tracked with no stock. Check the product's inventory in Shopify admin, or turn off tracking.
+- **A product shows "Sold out" but has stock:** its stock is at a location that doesn't fulfil online orders, such as the warehouse Shopify's generated test data adds. Check the product's inventory in Shopify admin, or turn off tracking.
+- **Imported products have 0 stock:** the store has more than one location, so Shopify ignores the CSV's stock column. Set stock under **Products > Inventory**.
 - **A product or collection is missing from the site:** publish it to the **Headless** channel, then rebuild.
 - **A new product is missing from CloudCannon's pickers:** run `npm run sync:shopify` and commit `src/data/shopify/`.
 - **A product is missing from CloudCannon's Product pages:** run `npm run sync:shopify` and commit the new file in `src/content/product-pages/`.
