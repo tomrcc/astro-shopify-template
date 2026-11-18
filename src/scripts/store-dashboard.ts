@@ -167,6 +167,12 @@ function productLink(handle: string, title: string) {
   return h("a", { href: `/products/${handle}/` }, title);
 }
 
+function seeOrders() {
+  const button = h("button", { type: "button", class: "link-button" }, "See orders");
+  button.addEventListener("click", () => showView("orders"));
+  return button;
+}
+
 async function renderToday() {
   const o = await getOverview();
   const lowList = o.lowStock.length
@@ -194,7 +200,7 @@ async function renderToday() {
       { class: "tiles", "aria-label": "Totals" },
       tile("Sales today", roundMoney(o.today.sales), `${o.today.orders} orders so far`),
       tile("Last 7 days", roundMoney(o.week.sales), `${o.week.orders} orders`),
-      tile("To ship", whole.format(o.toShip), h("a", { href: "#orders" }, "See orders")),
+      tile("To ship", whole.format(o.toShip), seeOrders()),
       tile("Running low", whole.format(o.lowStock.length), `${LOW_STOCK} or fewer left`),
     ),
     card("Sales per day", "last 28 days", trendChart(o.daily)),
@@ -360,20 +366,26 @@ async function renderContent() {
 const VIEWS = { today: renderToday, products: renderProducts, orders: renderOrders, content: renderContent };
 type View = keyof typeof VIEWS;
 
-function currentView(): View {
-  const id = location.hash.slice(1);
-  return id in VIEWS ? (id as View) : "today";
+// Tabs are buttons with their own state: the Visual Editor handles link clicks in its preview, so hash links don't switch views there.
+const initial = location.hash.slice(1);
+let currentView: View = initial in VIEWS ? (initial as View) : "today";
+
+function showView(view: View) {
+  currentView = view;
+  try {
+    history.replaceState(null, "", `#${view}`);
+  } catch {}
+  render();
 }
 
 async function render() {
-  const view = currentView();
-  root.querySelectorAll<HTMLAnchorElement>("[data-tab]").forEach((tab) => {
-    if (tab.dataset.tab === view) tab.setAttribute("aria-current", "page");
-    else tab.removeAttribute("aria-current");
+  const view = currentView;
+  root.querySelectorAll<HTMLButtonElement>("[data-tab]").forEach((tab) => {
+    tab.setAttribute("aria-selected", String(tab.dataset.tab === view));
   });
   try {
     const nodes = await VIEWS[view]();
-    if (currentView() === view) viewEl.replaceChildren(...nodes);
+    if (currentView === view) viewEl.replaceChildren(...nodes);
   } catch (error) {
     console.error("[store]", error);
     viewEl.replaceChildren(h("p", { class: "store-muted" }, "The store data didn't load. Reload to try again."));
@@ -385,5 +397,7 @@ root.querySelector("[data-reset]")?.addEventListener("click", () => {
   toast("Demo data reset");
   render();
 });
-window.addEventListener("hashchange", render);
+root.querySelectorAll<HTMLButtonElement>("[data-tab]").forEach((tab) => {
+  tab.addEventListener("click", () => showView(tab.dataset.tab as View));
+});
 render();

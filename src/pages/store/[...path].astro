@@ -36,9 +36,9 @@ const views = [
 			up. Changes stay in this browser and never reach Shopify.
 		</p>
 
-		<nav class="store-tabs" aria-label="Store views">
-			{views.map((view) => <a href={`#${view.id}`} data-tab={view.id}>{view.label}</a>)}
-		</nav>
+		<div class="store-tabs" role="tablist" aria-label="Store views">
+			{views.map((view) => <button type="button" role="tab" aria-selected="false" data-tab={view.id}>{view.label}</button>)}
+		</div>
 
 		<div class="store-view" data-view aria-live="polite"><p class="store-muted">Loading…</p></div>
 		<div class="store-toast" data-toast role="status" hidden></div>
@@ -110,14 +110,17 @@ const views = [
 		border-bottom: 1px solid var(--line);
 		overflow-x: auto;
 	}
-	.store-tabs a {
+	.store-tabs button {
 		padding: 0.5rem 0.9rem;
+		border: 0;
 		border-bottom: 2px solid transparent;
+		background: none;
 		color: var(--ink-soft);
-		text-decoration: none;
+		font: inherit;
 		white-space: nowrap;
+		cursor: pointer;
 	}
-	.store-tabs a[aria-current='page'] {
+	.store-tabs button[aria-selected='true'] {
 		border-bottom-color: var(--accent);
 		color: var(--ink);
 		font-weight: 600;
@@ -176,8 +179,14 @@ const views = [
 		font-size: 0.875rem;
 		color: var(--ink-soft);
 	}
-	.store .tile-sub a {
+	.store .link-button {
+		padding: 0;
+		border: 0;
+		background: none;
 		color: inherit;
+		font: inherit;
+		text-decoration: underline;
+		cursor: pointer;
 	}
 	.store .pair {
 		display: grid;
