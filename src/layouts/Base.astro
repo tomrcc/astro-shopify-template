@@ -4,13 +4,16 @@ import Header from '../components/Header.astro';
 import Footer from '../components/Footer.astro';
 import CartDrawer from '../components/shop/CartDrawer.astro';
 import site from '../data/site.json';
+import { GA_MEASUREMENT_ID } from 'astro:env/server';
+import { isStoreDemoEnabled } from '../lib/store-demo/enabled';
 
 interface Props {
 	title: string;
 	description?: string | null;
 	image?: string | null;
+	noindex?: boolean;
 }
-const { title, description, image } = Astro.props;
+const { title, description, image, noindex = false } = Astro.props;
 const pageTitle = title === site.title ? title : `${title} · ${site.title}`;
 ---
 <html lang="en">
@@ -22,8 +25,26 @@ const pageTitle = title === site.title ? title : `${title} · ${site.title}`;
 		<title>{pageTitle}</title>
 		<meta name="description" content={description || site.description} />
 		{image && <meta property="og:image" content={image} />}
+		{noindex && <meta name="robots" content="noindex" />}
+		{GA_MEASUREMENT_ID && (
+			<script is:inline define:vars={{ measurementId: GA_MEASUREMENT_ID }}>
+				// The Visual Editor can load production pages too; editor previews would count as visits.
+				if (!window.inEditorMode) {
+					window.dataLayer = window.dataLayer || [];
+					window.gtag = function () {
+						window.dataLayer.push(arguments);
+					};
+					window.gtag('js', new Date());
+					window.gtag('config', measurementId);
+					const tag = document.createElement('script');
+					tag.async = true;
+					tag.src = `https://www.googletagmanager.com/gtag/js?id=${measurementId}`;
+					document.head.append(tag);
+				}
+			</script>
+		)}
 	</head>
-	<body>
+	<body data-store-demo={isStoreDemoEnabled() ? '' : undefined}>
 		<Header />
 		<main>
 			<slot />
@@ -35,6 +56,14 @@ const pageTitle = title === site.title ? title : `${title} · ${site.title}`;
 				import('../cloudcannon/registerComponents').catch((error) => {
 					console.warn('Failed to load CloudCannon component registration:', error);
 				});
+				import('../scripts/analytics-panel').catch((error) => {
+					console.warn('Failed to load the analytics panel:', error);
+				});
+				if (document.body.hasAttribute('data-store-demo')) {
+					import('../scripts/store-panel').catch((error) => {
+						console.warn('Failed to load the store panel:', error);
+					});
+				}
 			}
 		</script>
 	</body>

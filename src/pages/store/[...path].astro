@@ -1,0 +1,412 @@
+---
+import { getCollection } from 'astro:content';
+import Base from '../../layouts/Base.astro';
+import site from '../../data/site.json';
+import { isStoreDemoEnabled } from '../../lib/store-demo/enabled';
+
+// Builds /store/ only when the demo is enabled, so production has no page at all.
+export function getStaticPaths() {
+	return isStoreDemoEnabled() ? [{ params: { path: undefined } }] : [];
+}
+
+const posts = (await getCollection('posts'))
+	.filter((post) => post.data.shop?.products?.length)
+	.map((post) => ({ title: post.data.title, url: `/blog/${post.id}/`, products: post.data.shop?.products ?? [] }));
+
+const views = [
+	{ id: 'today', label: 'Today' },
+	{ id: 'products', label: 'Products' },
+	{ id: 'orders', label: 'Orders' },
+	{ id: 'content', label: 'Content that sells' },
+];
+---
+
+<Base title="Store" noindex>
+	<div class="section store" data-posts={JSON.stringify(posts)}>
+		<header class="store-header">
+			<div>
+				<h1>Store</h1>
+				<p class="store-sub">{site.title} · the parts of Shopify this team uses every day</p>
+			</div>
+			<button type="button" class="store-button" data-reset>Reset demo</button>
+		</header>
+
+		<p class="store-demo-note" role="note">
+			<strong>Demo with sample data.</strong> Products come from the store's catalog; stock, orders and sales are made
+			up. Changes stay in this browser and never reach Shopify.
+		</p>
+
+		<nav class="store-tabs" aria-label="Store views">
+			{views.map((view) => <a href={`#${view.id}`} data-tab={view.id}>{view.label}</a>)}
+		</nav>
+
+		<div class="store-view" data-view aria-live="polite"><p class="store-muted">Loading…</p></div>
+		<div class="store-toast" data-toast role="status" hidden></div>
+	</div>
+</Base>
+
+<script>
+	import '../../scripts/store-dashboard';
+</script>
+
+<style is:global>
+	.store {
+		--series-1: var(--accent);
+		--good: #2f6b45;
+		--good-soft: #e3efe6;
+		--warn: #7a4b00;
+		--warn-soft: #fdf0d5;
+		display: grid;
+		gap: 1.25rem;
+	}
+	.store h1 {
+		margin: 0;
+	}
+	.store-header {
+		display: flex;
+		flex-wrap: wrap;
+		align-items: flex-end;
+		justify-content: space-between;
+		gap: 1rem;
+	}
+	.store-sub,
+	.store-muted {
+		margin: 0.25rem 0 0;
+		color: var(--ink-soft);
+	}
+	.store-demo-note {
+		margin: 0;
+		padding: 0.75rem 1rem;
+		border-radius: var(--radius);
+		background: var(--warn-soft);
+		color: var(--warn);
+		font-size: 0.875rem;
+	}
+	.store-button {
+		padding: 0.4rem 0.9rem;
+		border: 1px solid var(--line);
+		border-radius: 999px;
+		background: var(--card);
+		color: var(--ink);
+		font: inherit;
+		font-size: 0.875rem;
+		cursor: pointer;
+	}
+	.store-button:hover {
+		border-color: var(--ink-soft);
+	}
+	.store-button[data-primary] {
+		border-color: var(--forest);
+		background: var(--forest);
+		color: #fff;
+	}
+	.store-button:disabled {
+		opacity: 0.6;
+		cursor: progress;
+	}
+	.store-tabs {
+		display: flex;
+		gap: 0.25rem;
+		border-bottom: 1px solid var(--line);
+		overflow-x: auto;
+	}
+	.store-tabs a {
+		padding: 0.5rem 0.9rem;
+		border-bottom: 2px solid transparent;
+		color: var(--ink-soft);
+		text-decoration: none;
+		white-space: nowrap;
+	}
+	.store-tabs a[aria-current='page'] {
+		border-bottom-color: var(--accent);
+		color: var(--ink);
+		font-weight: 600;
+	}
+	.store-view {
+		display: grid;
+		gap: 1rem;
+	}
+	.store .card {
+		padding: 1.25rem;
+		border: 1px solid var(--line);
+		border-radius: var(--radius);
+		background: var(--card);
+		min-width: 0;
+	}
+	.store .card h2 {
+		font-size: 1.25rem;
+		margin: 0 0 0.75rem;
+	}
+	.store .card-head {
+		display: flex;
+		flex-wrap: wrap;
+		align-items: baseline;
+		justify-content: space-between;
+		gap: 0.5rem;
+		margin-bottom: 0.75rem;
+	}
+	.store .card-head h2 {
+		margin: 0;
+	}
+	.store .unit {
+		font-family: inherit;
+		font-size: 0.875rem;
+		font-weight: 400;
+		color: var(--ink-soft);
+	}
+	.store .tiles {
+		display: grid;
+		grid-template-columns: repeat(2, minmax(0, 1fr));
+		gap: 1rem;
+	}
+	.store .tile-label {
+		margin: 0;
+		font-size: 0.875rem;
+		color: var(--ink-soft);
+	}
+	.store .tile-value {
+		margin: 0.25rem 0 0;
+		font-size: 2rem;
+		font-weight: 600;
+		line-height: 1.2;
+		font-variant-numeric: tabular-nums;
+	}
+	.store .tile-sub {
+		margin: 0.25rem 0 0;
+		font-size: 0.875rem;
+		color: var(--ink-soft);
+	}
+	.store .tile-sub a {
+		color: inherit;
+	}
+	.store .pair {
+		display: grid;
+		gap: 1rem;
+	}
+	@media (min-width: 60rem) {
+		.store .tiles {
+			grid-template-columns: repeat(4, minmax(0, 1fr));
+		}
+		.store .pair {
+			grid-template-columns: repeat(2, minmax(0, 1fr));
+		}
+	}
+	.store ol,
+	.store ul.plain {
+		list-style: none;
+		margin: 0;
+		padding: 0;
+		display: grid;
+		gap: 0.6rem;
+	}
+	.store .bar-row {
+		display: flex;
+		justify-content: space-between;
+		gap: 0.75rem;
+		font-size: 0.875rem;
+	}
+	.store .bar-name {
+		min-width: 0;
+		white-space: nowrap;
+		overflow: hidden;
+		text-overflow: ellipsis;
+	}
+	.store .num {
+		font-variant-numeric: tabular-nums;
+		color: var(--ink-soft);
+		text-align: right;
+		white-space: nowrap;
+	}
+	.store .bar-track {
+		height: 6px;
+		margin-top: 0.25rem;
+		border-radius: 4px;
+		background: var(--paper);
+	}
+	.store .bar {
+		height: 100%;
+		border-radius: 4px;
+		background: var(--series-1);
+	}
+	.store .trend {
+		position: relative;
+	}
+	.store .trend svg {
+		display: block;
+		width: 100%;
+		height: auto;
+		touch-action: none;
+		outline: none;
+	}
+	.store .grid-line {
+		stroke: var(--line);
+		stroke-width: 1;
+	}
+	.store .axis-label {
+		fill: var(--ink-soft);
+		font-size: 12px;
+	}
+	.store .series-line {
+		fill: none;
+		stroke: var(--series-1);
+		stroke-width: 2;
+		stroke-linejoin: round;
+	}
+	.store .series-area {
+		fill: var(--series-1);
+		opacity: 0.1;
+	}
+	.store .crosshair {
+		stroke: var(--ink-soft);
+		stroke-width: 1;
+	}
+	.store .crosshair-dot {
+		fill: var(--series-1);
+		stroke: var(--card);
+		stroke-width: 2;
+	}
+	.store .trend-tip {
+		position: absolute;
+		top: 0;
+		pointer-events: none;
+		transform: translateX(-50%);
+		background: var(--ink);
+		color: var(--paper);
+		border-radius: 6px;
+		padding: 4px 8px;
+		font-size: 12px;
+		white-space: nowrap;
+	}
+	.store .table-scroll {
+		overflow-x: auto;
+	}
+	.store table {
+		width: 100%;
+		border-collapse: collapse;
+		font-size: 0.875rem;
+	}
+	.store th {
+		font-weight: 600;
+		color: var(--ink-soft);
+		text-align: left;
+		white-space: nowrap;
+	}
+	.store th,
+	.store td {
+		padding: 0.6rem 1rem 0.6rem 0;
+		border-bottom: 1px solid var(--line);
+		vertical-align: middle;
+	}
+	.store th:last-child,
+	.store td:last-child {
+		padding-right: 0;
+	}
+	.store .product-cell {
+		display: flex;
+		align-items: center;
+		gap: 0.75rem;
+		min-width: 14rem;
+	}
+	.store .thumb {
+		flex: none;
+		width: 40px;
+		height: 40px;
+		border-radius: 8px;
+		object-fit: cover;
+		background: var(--paper);
+	}
+	.store .small {
+		display: block;
+		font-size: 0.75rem;
+		color: var(--ink-soft);
+	}
+	.store .small a {
+		color: inherit;
+		text-underline-offset: 2px;
+	}
+	.store input,
+	.store select {
+		padding: 0.35rem 0.5rem;
+		border: 1px solid var(--line);
+		border-radius: 8px;
+		background: var(--card);
+		color: var(--ink);
+		font: inherit;
+		font-variant-numeric: tabular-nums;
+	}
+	.store input[type='number'] {
+		width: 6.5rem;
+	}
+	.store .saving {
+		opacity: 0.6;
+	}
+	.store .chip {
+		display: inline-block;
+		padding: 0.1rem 0.5rem;
+		border-radius: 999px;
+		font-size: 0.75rem;
+		font-weight: 600;
+		white-space: nowrap;
+	}
+	.store .chip.good {
+		background: var(--good-soft);
+		color: var(--good);
+	}
+	.store .chip.warn {
+		background: var(--warn-soft);
+		color: var(--warn);
+	}
+	.store .chip.muted {
+		background: var(--paper);
+		color: var(--ink-soft);
+	}
+	.store .filters {
+		display: flex;
+		gap: 0.5rem;
+	}
+	.store .filters .store-button[aria-pressed='true'] {
+		border-color: var(--ink);
+		background: var(--ink);
+		color: var(--paper);
+	}
+	.store .low-row {
+		display: flex;
+		align-items: center;
+		gap: 0.75rem;
+		font-size: 0.875rem;
+	}
+	.store .low-row .grow {
+		flex: 1;
+		min-width: 0;
+	}
+	.store .posts {
+		display: grid;
+		gap: 1rem;
+	}
+	@media (min-width: 60rem) {
+		.store .posts {
+			grid-template-columns: repeat(2, minmax(0, 1fr));
+		}
+	}
+	.store .post-total {
+		font-size: 1.5rem;
+		font-weight: 600;
+		font-variant-numeric: tabular-nums;
+	}
+	.store-toast {
+		position: fixed;
+		right: 16px;
+		bottom: 16px;
+		z-index: 50;
+		padding: 0.6rem 1rem;
+		border-radius: 10px;
+		background: var(--ink);
+		color: var(--paper);
+		font-size: 0.875rem;
+		box-shadow: 0 8px 30px rgb(0 0 0 / 0.2);
+	}
+	.store-toast[data-error] {
+		background: #8a1f11;
+		color: #fff;
+	}
+</style>

@@ -195,6 +195,205 @@ The product and collection pickers read `src/data/shopify/` from the repository.
 
 The **Featured products** and **Collection grid** sections render from the same files, so they re-render in the Visual Editor without calling Shopify. Production builds run the sync first, so live pages always use the current catalog.
 
+## Analytics in CloudCannon
+
+Editors can see Google Analytics (GA4) numbers for the live site without leaving CloudCannon:
+
+- **Dashboard:** **Insights > Analytics** opens `/analytics/`, with site totals, a daily trend, top pages, views by page type (products, collections, Journal, pages), channels, devices and a table of every page.
+- **Per-page pop-up:** every page opened in the Visual Editor shows that page's views, users, engagement, bounce rate, daily trend and top sources in the bottom-left corner.
+
+The two builds split the work:
+
+- **Netlify** carries the GA4 tracking tag when `GA_MEASUREMENT_ID` is set, and builds no analytics pages.
+- **The editor build** reads the GA4 Data API during the build when `ANALYTICS_ENABLED` is set, and writes the dashboard and `/analytics/pages.json`, the pop-up's data. Without `GA_PROPERTY_ID` and `GA_CREDENTIALS` it uses generated mock data, labelled **Mock data** on the dashboard.
+
+The data is as fresh as the last CloudCannon build, and covers the last 28 days ending yesterday. The pop-up only loads behind `window.inEditorMode`, and shows nothing when `pages.json` is missing.
+
+| Variable | Set on | Purpose |
+| --- | --- | --- |
+| `GA_MEASUREMENT_ID` | Netlify | Adds the gtag tracking snippet. Public by design. |
+| `ANALYTICS_ENABLED` | CloudCannon | Builds `/analytics/` and `pages.json` |
+| `GA_PROPERTY_ID` | CloudCannon | The numeric GA4 property ID the build reads |
+| `GA_CREDENTIALS` | CloudCannon | A service account JSON key, raw or base64. The only secret. |
+
+The build fails if `ANALYTICS_ENABLED` is set without `PUBLIC_EDITOR_BUILD`, or together with `GA_MEASUREMENT_ID`, since either means the dashboard is about to be published on the live site. `GA_PROPERTY_ID` and `GA_CREDENTIALS` are declared `access: "secret"` in `astro.config.mjs`, so they never reach the built site.
+
+### Try it with mock data
+
+Set `ANALYTICS_ENABLED=true` on the CloudCannon site under **Site Settings > Builds**, next to `PUBLIC_EDITOR_BUILD`, and rebuild. Locally:
+
+```sh
+PUBLIC_EDITOR_BUILD=true ANALYTICS_ENABLED=true npm run build
+npx @cloudcannon/cli dev dist
+```
+
+### Set up analytics with real data
+
+Work through these in order. Each step says where it happens and how to check it before moving on. Steps in Google Analytics and the CloudCannon authentication setting happen in a browser. The others also have a command-line form.
+
+You need:
+
+- the Netlify site and the CloudCannon site from [Setup](#setup) steps 3 and 4
+- a Google account that can create a Google Analytics property
+- a Google Cloud project, or permission to create one. It doesn't need billing.
+- optionally the `netlify` and `gcloud` CLIs, signed in, for steps 3 and 4 below
+
+Values you'll collect along the way:
+
+- **Measurement ID:** `G-XXXXXXXXXX`, for tracking. Goes on Netlify as `GA_MEASUREMENT_ID`.
+- **Property ID:** a plain number such as `412345678`, for reading. Goes on CloudCannon as `GA_PROPERTY_ID`.
+- **Service account key:** a JSON file with a private key. Goes on CloudCannon as `GA_CREDENTIALS`.
+
+The two IDs are easy to mix up. The measurement ID sends data in and is public. The property ID, with the key, reads data out.
+
+#### 1. Lock the CloudCannon site
+
+In CloudCannon, go to **Site Settings > Authentication** and choose **CloudCannon** or **Password**. The editor build has its own public URL, and once real data loads, the dashboard and `pages.json` are served from it. The Visual Editor keeps working behind authentication.
+
+Check: open the CloudCannon site's URL (`*.cloudvent.net`) in a private window. It asks you to sign in.
+
+#### 2. Create the GA4 property
+
+In [Google Analytics](https://analytics.google.com):
+
+1. Go to **Admin > Create > Property**, and create it in an existing account or a new one.
+2. Add a **Web** data stream for the Netlify URL, with **Enhanced measurement** left on.
+3. Copy the **measurement ID** from the data stream.
+4. Copy the **property ID** from **Admin > Property details**.
+5. Under **Admin > Data collection**, leave **Google signals** off. With it on, GA hides small numbers in reports, which leaves gaps on a low-traffic store.
+
+The template reads only dimensions and metrics GA4 collects by default, so the property needs no custom events or dimensions.
+
+#### 3. Track the live site
+
+Set `GA_MEASUREMENT_ID` on Netlify only, under **Site configuration > Environment variables**, then trigger a deploy. With the Netlify CLI, from a folder linked to the site:
+
+```sh
+netlify env:set GA_MEASUREMENT_ID G-XXXXXXXXXX
+```
+
+Check:
+
+- the live site's page source contains `googletagmanager.com/gtag/js?id=G-`
+- a visit to the live site in a normal tab shows under **Reports > Realtime** in GA within a minute or so
+
+The snippet skips the Visual Editor, so editors' previews don't count as visits. Never set the measurement ID on CloudCannon: any page carrying it reports to the property, and the build fails if it's set alongside `ANALYTICS_ENABLED`.
+
+#### 4. Create a service account for the build
+
+The CloudCannon build reads GA as a Google Cloud service account.
+
+In the [Google Cloud console](https://console.cloud.google.com), with the project selected:
+
+1. Under **APIs & Services > Library**, enable the **Google Analytics Data API**.
+2. Under **IAM & Admin > Service Accounts**, create a service account, for example `analytics-reader`. Skip the optional step that grants it access to the project.
+3. Open it, go to **Keys > Add key > Create new key > JSON**, and save the file outside this repository.
+4. Copy its email address, `<name>@<project>.iam.gserviceaccount.com`.
+
+With `gcloud`, replacing `<project>`:
+
+```sh
+gcloud services enable analyticsdata.googleapis.com --project <project>
+gcloud iam service-accounts create analytics-reader --project <project>
+gcloud iam service-accounts keys create ~/Downloads/analytics-reader.json \
+  --iam-account analytics-reader@<project>.iam.gserviceaccount.com
+```
+
+If creating the key fails with an organisation policy error, the Google Cloud organisation blocks service account keys. Ask an organisation admin to allow them for this project, or use a project outside the organisation.
+
+The key file is a password. Never commit it, paste it into chat, or put it on the command line where shell history keeps it. Keep it in a password manager, or delete it once it's in CloudCannon. If it leaks, delete it under the service account's **Keys** tab and create a new one.
+
+#### 5. Give the service account read access in GA
+
+In Google Analytics, go to **Admin > Property access management > + > Add users**. Paste the service account's email, choose the **Viewer** role, and untick the email notification. Viewer access means a leaked key can read this one property but not change it.
+
+#### 6. Point the CloudCannon build at GA
+
+Base64-encode the key so it fits on one line:
+
+```sh
+base64 -i ~/Downloads/analytics-reader.json | pbcopy
+```
+
+On the CloudCannon site, under **Site Settings > Builds**, add these next to `PUBLIC_EDITOR_BUILD`, then rebuild:
+
+- `ANALYTICS_ENABLED`: `true`
+- `GA_PROPERTY_ID`: the numeric property ID
+- `GA_CREDENTIALS`: the base64 key. Raw JSON also works.
+
+Enter `GA_CREDENTIALS` in the dashboard. The CLI's `sites update-build-config` would put the key in shell history, and it replaces the whole build configuration: any of the install command, build command, output path or Node version left out of the call is dropped. For the two non-secret variables, read the current settings first with `npx @cloudcannon/cli sites get --site <site>` and pass them all back, ending `--environment-variables` with `...` to keep the existing variables.
+
+Check:
+
+- `npx @cloudcannon/cli sites print-last-build --site <site>` shows the `/analytics/` routes and no `[analytics] GA_PROPERTY_ID or GA_CREDENTIALS not set, using mock data` line
+- **Insights > Analytics** shows real numbers and no **Mock data** badge
+- a product page opened in the Visual Editor shows the pop-up in the bottom-left corner
+
+A new property has no data for 24–48 hours, so the dashboard shows zeros until then. Rebuild a day later.
+
+#### Keep each variable on its own host
+
+- **Netlify:** `GA_MEASUREMENT_ID` only.
+- **CloudCannon:** `ANALYTICS_ENABLED`, `GA_PROPERTY_ID` and `GA_CREDENTIALS` only.
+
+A CloudCannon site copies its environment variables when branched or duplicated. Check a new site has only the variables for its role.
+
+The numbers refresh only when CloudCannon builds, which happens on every save. Each build makes six GA4 Data API requests. Standard GA4 and the Data API are free, with daily request quotas per property instead of billing.
+
+## Store dashboard (demo)
+
+A sketch of running the day-to-day side of the shop from CloudCannon: a simplified dashboard designed for this store, beside the content it sells with. It runs on sample data and never contacts Shopify. Going live needs a CloudCannon feature that doesn't exist yet: a way for pages in the Visual Editor to call an API with a secret the browser never sees.
+
+- **Dashboard:** **Shop > Store** opens `/store/`, with four views:
+  - **Today:** sales today and over 7 days, orders to ship, products running low, a 28-day sales trend and best sellers. Each low-stock product has an **Add 20** button.
+  - **Products:** price, stock and status (on sale or hidden) for every product, edited in place, with a link to each product's page content.
+  - **Orders:** orders waiting to ship, each with **Mark shipped**, and recent orders.
+  - **Content that sells:** each Journal post with 28-day sales of the products it links to in `shop.products`.
+- **Pop-up:** product pages in the Visual Editor show a store pop-up in the bottom-right corner, with that product's price, stock and status to edit, and its sales over the last 7 and 28 days. Editors change the copy and the price on one screen.
+
+### Try it
+
+Set `STORE_DEMO=true` on the CloudCannon site under **Site Settings > Builds**, next to `PUBLIC_EDITOR_BUILD`, and rebuild. Locally:
+
+```sh
+PUBLIC_EDITOR_BUILD=true STORE_DEMO=true npm run dev
+```
+
+The build fails if `STORE_DEMO` is set without `PUBLIC_EDITOR_BUILD`, so the dashboard never reaches the live site. Edits are kept in the browser's local storage; **Reset demo** clears them.
+
+### The sample data
+
+Products, handles, images and prices come from the synced catalog in `src/data/shopify/products.json`, so the demo shows the store the site is connected to. The development store behind this template was seeded from `coffee.mock.shop` with `npm run catalog:csv` (see [Use your own Shopify store](#5-use-your-own-shopify-store)), so it has the same 8 products and handles, and a new store set up the same way does too. Stock, orders and sales are generated from a fixed seed, with dates counted back from today. The two best sellers start with 3 and 4 in stock so **Running low** has something in it.
+
+### Wiring it to Shopify
+
+This is the brief for connecting the demo to a real store once CloudCannon can hold a secret for the Visual Editor.
+
+**What the feature must provide.** The Shopify Admin API token can change products and read customer details, so it must never reach the browser. The editor build serves its pages to the browser, so a `PUBLIC_*` variable doesn't work, and nor does a build-time `astro:env` secret, which is only readable at build time. The dashboard needs a request-time call from the editor page that CloudCannon signs with the token on the server, limited to people who can edit the site. Until then, reads alone could move to build time the way analytics does, as a snapshot refreshed on every save. Writes can't.
+
+**Where the code changes.** The dashboard and pop-up use only the functions in `src/lib/store-demo/store.ts`. Replace each body with an Admin GraphQL call through the CloudCannon feature, keep the signatures, then delete `mock.ts`, the **Reset demo** button, the demo note on `/store/` and the **Demo data** badge in the pop-up, and rename the folder and `STORE_DEMO`.
+
+| Function | Admin GraphQL |
+| --- | --- |
+| `listProducts` | `products` query: `handle`, `title`, `status`, `featuredMedia`, `totalInventory`, and variants with `price`, `inventoryQuantity` and `inventoryItem { id }` |
+| `updateProduct` (price) | `productVariantsBulkUpdate`, with each variant's `id` and `price` |
+| `updateProduct` (status) | `productUpdate`, with `status: ACTIVE` or `DRAFT` |
+| `setStock` | `inventorySetQuantities` on the `available` quantity, with the variant's `inventoryItem` id and the store's location id (from `locations`) |
+| `listOrders` | `orders` query, newest first: `name`, `createdAt`, `displayFulfillmentStatus`, `totalPriceSet`, `lineItems`, the customer's name and the shipping address city |
+| `markShipped` | the order's `fulfillmentOrders`, then `fulfillmentCreate` for each open one |
+| `getOverview`, `getSalesByProduct`, `getProductStats` | totals over 28 days of orders. For a busier store, check whether ShopifyQL through the Admin API fits better than paging through orders. |
+
+Check each mutation's input shape against the API version in `PUBLIC_SHOPIFY_API_VERSION` before relying on this table: Shopify reshapes inputs between versions.
+
+**The custom app's scopes:** `read_products`, `write_products`, `read_inventory`, `write_inventory`, `read_locations`, `read_orders`, `read_merchant_managed_fulfillment_orders` and `write_merchant_managed_fulfillment_orders`. Customer names on orders also need protected customer data access, which a custom app on a development store can turn on in its settings.
+
+**Decisions to make with the site owner:**
+
+- **Variants.** The demo treats each product as one price and one stock level. The sample products have variants (finish, capacity), so choose between editing each variant and setting all of a product's variants at once.
+- **Who can change the store.** Everyone who can edit the site gets the token's full access. Decide whether that's acceptable or the feature needs to limit live changes by role.
+- **Hidden products.** A draft product leaves the Storefront API, so the next `npm run sync:shopify` lists its page file as no longer in Shopify, and the product pickers drop it. Decide whether **Hidden** should mean draft, or unpublished from the Headless channel, which hides it from the site but not from Shopify admin.
+- **Prices in the editor.** Pages in the editor build show prices from the last build, so a new price shows on the live site within a minute but not on the editor's copy of the page until it rebuilds.
+
 ## Code map
 
 - `src/lib/shopify/`: the Storefront API client, queries, types, the cart and image helpers.
@@ -210,6 +409,14 @@ The **Featured products** and **Collection grid** sections render from the same 
 - `.cloudcannon/README.md`: the guide editors see in CloudCannon.
 - `.cloudcannon/migration/visual-editing.md`: how each part of each page is made editable.
 - `scripts/sync-shopify.mjs`: the catalog sync.
+- `src/lib/analytics.ts`: fetches the GA4 report at build time, or generates mock data for every built page.
+- `src/pages/analytics/`: the `/analytics/` dashboard and `/analytics/pages.json`.
+- `src/scripts/analytics-panel.ts`: the editor-only per-page pop-up, styled inside a shadow root.
+- `analytics/index.md`: the stub file behind **Insights > Analytics** in CloudCannon.
+- `src/lib/store-demo/store.ts`: every read and write the store dashboard and its pop-up make. `mock.ts` beside it supplies the sample data, and `enabled.ts` holds the build guard.
+- `src/pages/store/[...path].astro` and `src/scripts/store-dashboard.ts`: the `/store/` dashboard, rendered in the browser.
+- `src/scripts/store-panel.ts`: the editor-only store pop-up on product pages.
+- `store/index.md`: the stub file behind **Shop > Store** in CloudCannon.
 
 The product form is a plain element wired up by a script rather than a custom element: Astro sets up a server island twice when it sits inside a custom element tag, which adds an unused preload request.
 
@@ -231,6 +438,14 @@ The product form is a plain element wired up by a script rather than a custom el
 - **A product is missing from CloudCannon's Product pages:** run `npm run sync:shopify` and commit the new file in `src/content/product-pages/`.
 - **Prices don't load on the live site:** check `PUBLIC_EDITOR_BUILD` isn't set on the production host.
 - **A page won't open in the Visual Editor:** it must be prerendered and its file's collection `url` must match the built path.
+- **Insights > Analytics shows "No Preview Available", or there's no pop-up:** `ANALYTICS_ENABLED` isn't set on the CloudCannon site. The preview's console logs `[analytics] /analytics/pages.json returned 404; this build has no analytics`.
+- **The dashboard shows "Mock data":** `GA_PROPERTY_ID` or `GA_CREDENTIALS` is missing on the CloudCannon site.
+- **The build fails with `GA4 request failed: gRPC 7`:** the service account isn't a Viewer on the property, or `GA_PROPERTY_ID` holds the `G-` measurement ID.
+- **The build fails with `GA_CREDENTIALS is not valid service account JSON` or `is missing client_email or private_key`:** the key was cut short or changed when pasted. Copy the base64 output again in full.
+- **The build fails with a `GA4 request failed` message saying the API is disabled or hasn't been used:** enable the Google Analytics Data API in the service account's Google Cloud project.
+- **The build fails with `the Google client failed before reaching the API`:** the key parsed, but signing in failed. Usually the key was deleted or isn't valid; a network failure during the build gives the same message. Rebuild once, then create a new key if it persists. The log leaves out the underlying error because it can quote the key.
+- **The build fails with `ANALYTICS_ENABLED needs PUBLIC_EDITOR_BUILD` or `ANALYTICS_ENABLED and GA_MEASUREMENT_ID are both set`:** a host has the other host's variables. See [Keep each variable on its own host](#keep-each-variable-on-its-own-host).
+- **The dashboard shows zeros:** the property is less than two days old, or Netlify has no `GA_MEASUREMENT_ID`. Check **Reports > Realtime** in GA, then rebuild CloudCannon a day later.
 
 ## Is this setup right for your store?
 

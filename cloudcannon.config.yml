@@ -133,6 +133,18 @@ collections_config:
       image_alt:
         type: text
         label: Image description
+  analytics:
+    # Opens /analytics/, which builds only with ANALYTICS_ENABLED.
+    path: analytics
+    name: Analytics
+    description: Visits to the live site over the last 28 days, as of the last build.
+    url: /analytics/
+    icon: query_stats
+    _enabled_editors:
+      - visual
+    disable_add: true
+    disable_add_folder: true
+    disable_file_actions: true
   data:
     path: src/data
     name: Site settings
@@ -146,6 +158,19 @@ collections_config:
     _enabled_editors:
       - data
 
+  store:
+    # Opens /store/, which builds only with STORE_DEMO.
+    path: store
+    name: Store
+    description: Sales, stock and orders, with sample data.
+    url: /store/
+    icon: storefront
+    _enabled_editors:
+      - visual
+    disable_add: true
+    disable_add_folder: true
+    disable_file_actions: true
+
 collection_groups:
   - heading: Content
     collections:
@@ -153,8 +178,12 @@ collection_groups:
       - posts
   - heading: Shop
     collections:
+      - store
       - product_pages
       - collection_pages
+  - heading: Insights
+    collections:
+      - analytics
   - heading: Settings
     collections:
       - data

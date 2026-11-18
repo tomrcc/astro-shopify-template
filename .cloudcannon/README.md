@@ -9,6 +9,8 @@ The shop's products, prices, stock and checkout live in Shopify. Everything arou
 - [Product pages](cloudcannon:collections/product_pages)
 - [Collection pages](cloudcannon:collections/collection_pages)
 - [Site settings](cloudcannon:collections/data)
+- [Analytics](cloudcannon:collections/analytics)
+- [Store](cloudcannon:collections/store)
 
 ## Pages
 
@@ -41,6 +43,20 @@ Which products appear, and in what order, is set in Shopify admin. The **All pro
 - **site**: the store name, navigation and footer.
 - **announcement**: the bar across the top of every page.
 - **shop**: button labels and messages for the cart and product pages.
+
+## Analytics
+
+**Insights > Analytics** shows visits to the live site over the last 28 days: totals, a daily trend, the most-viewed products, collections, Journal posts and pages, and where visitors came from.
+
+Open any page in the Visual Editor to see that page's numbers in a pop-up in the bottom-left corner. Click it to expand or collapse it.
+
+The numbers are as fresh as the last build here, which happens on every save.
+
+## Store (demo)
+
+**Shop > Store** shows sales, stock and orders, and lets you change a product's price, stock and status, mark orders as shipped, and see which Journal posts link to products that sell. On a product page, the pop-up in the bottom-right corner does the same for that product.
+
+It's a demo with sample data: changes stay in your browser and never reach Shopify. **Reset demo** clears them.
 
 ## Parts that come from Shopify
 

@@ -1,0 +1,454 @@
+---
+import Base from '../../layouts/Base.astro';
+import {
+	PAGE_TYPES,
+	describePath,
+	getAnalyticsReport,
+	getPathLabels,
+	isAnalyticsEnabled,
+	isSitePath,
+	type NamedValue,
+} from '../../lib/analytics';
+
+// Builds /analytics/ only when analytics is enabled, so production has no page at all.
+export function getStaticPaths() {
+	return isAnalyticsEnabled() ? [{ params: { path: undefined } }] : [];
+}
+
+const [report, labels] = await Promise.all([getAnalyticsReport(), getPathLabels()]);
+
+const compact = new Intl.NumberFormat('en', { notation: 'compact', maximumFractionDigits: 1 });
+const whole = new Intl.NumberFormat('en');
+const duration = (s: number) => (s >= 60 ? `${Math.floor(s / 60)}m ${Math.round(s % 60)}s` : `${Math.round(s)}s`);
+const percent = (n: number) => `${Math.round(n * 100)}%`;
+const shortDate = (iso: string) =>
+	new Date(`${iso}T00:00:00Z`).toLocaleDateString('en', { day: 'numeric', month: 'short', timeZone: 'UTC' });
+
+const tiles = [
+	{ label: 'Users', value: compact.format(report.totals.users) },
+	{ label: 'Sessions', value: compact.format(report.totals.sessions) },
+	{ label: 'Page views', value: compact.format(report.totals.views) },
+	{ label: 'Avg engagement', value: duration(report.totals.engagementSeconds) },
+];
+
+// Trend chart geometry, in viewBox units.
+const W = 800, H = 240, padL = 44, padR = 12, padT = 12, padB = 28;
+const points = report.daily;
+const maxViews = Math.max(1, ...points.map((p) => p.views));
+const step = 10 ** Math.floor(Math.log10(maxViews / 3));
+const tick = [1, 2, 5, 10].map((m) => m * step).find((t) => maxViews / t <= 4) ?? step * 10;
+const yMax = Math.ceil(maxViews / tick) * tick;
+const yTicks = Array.from({ length: Math.round(yMax / tick) + 1 }, (_, i) => i * tick);
+const x = (i: number) => padL + (i * (W - padL - padR)) / Math.max(1, points.length - 1);
+const y = (v: number) => padT + (1 - v / yMax) * (H - padT - padB);
+const linePath = points.map((p, i) => `${i ? 'L' : 'M'}${x(i).toFixed(1)},${y(p.views).toFixed(1)}`).join('');
+const areaPath = `${linePath}L${x(points.length - 1).toFixed(1)},${y(0)}L${x(0).toFixed(1)},${y(0)}Z`;
+const xLabelIdx = [0, Math.floor((points.length - 1) / 2), points.length - 1];
+
+const pageRows = Object.entries(report.pages)
+	.map(([path, stats]) => ({ path, ...describePath(path, labels), ...stats }))
+	.sort((a, b) => b.views - a.views);
+
+const viewsByType = new Map<string, number>(PAGE_TYPES.map((t) => [t, 0]));
+for (const row of pageRows) viewsByType.set(row.type, (viewsByType.get(row.type) ?? 0) + row.views);
+
+interface BarItem extends NamedValue {
+	href?: string;
+	tag?: string;
+}
+const barLists: { title: string; unit: string; items: BarItem[] }[] = [
+	{
+		title: 'Top pages',
+		unit: 'views',
+		items: pageRows.slice(0, 8).map((p) => ({
+			name: p.title,
+			value: p.views,
+			tag: p.type,
+			href: isSitePath(p.path) ? p.path : undefined,
+		})),
+	},
+	{
+		title: 'Page types',
+		unit: 'views',
+		items: [...viewsByType].map(([name, value]) => ({ name, value })).sort((a, b) => b.value - a.value),
+	},
+	{ title: 'Channels', unit: 'sessions', items: report.channels },
+	{ title: 'Devices', unit: 'users', items: report.devices },
+];
+---
+
+<Base title="Analytics" noindex>
+	<div class="section analytics">
+		<header class="analytics-header">
+			<div>
+				<h1>Analytics</h1>
+				<p class="analytics-range">
+					Last {report.range.days} days ({shortDate(report.range.start)} – {shortDate(report.range.end)}) ·
+					snapshot from {new Date(report.generatedAt).toLocaleString('en-NZ', { timeZone: 'Pacific/Auckland' })}, rebuild to refresh
+				</p>
+			</div>
+			{report.source === 'mock' && <span class="analytics-badge">Mock data</span>}
+		</header>
+
+		<section class="tiles" aria-label="Totals">
+			{tiles.map((t) => (
+				<div class="card">
+					<p class="tile-label">{t.label}</p>
+					<p class="tile-value">{t.value}</p>
+				</div>
+			))}
+		</section>
+
+		<section class="card">
+			<h2>Page views per day</h2>
+			<div class="trend" data-points={JSON.stringify(points.map((p) => [shortDate(p.date), p.views]))}>
+				<svg
+					viewBox={`0 0 ${W} ${H}`}
+					role="img"
+					aria-label={`Page views per day, peaking at ${whole.format(maxViews)}`}
+					tabindex="0"
+				>
+					{yTicks.map((t) => (
+						<g>
+							<line x1={padL} x2={W - padR} y1={y(t)} y2={y(t)} class="grid-line" />
+							<text x={padL - 8} y={y(t)} dy="0.32em" text-anchor="end" class="axis-label">{compact.format(t)}</text>
+						</g>
+					))}
+					{xLabelIdx.map((i, n) => (
+						<text x={x(i)} y={H - 8} text-anchor={['start', 'middle', 'end'][n]} class="axis-label">
+							{shortDate(points[i].date)}
+						</text>
+					))}
+					<path d={areaPath} class="series-area" />
+					<path d={linePath} class="series-line" />
+					<line class="crosshair" y1={padT} y2={y(0)} visibility="hidden" />
+					<circle class="crosshair-dot" r="4" visibility="hidden" />
+					<rect class="hit" x={padL} y={padT} width={W - padL - padR} height={H - padT - padB} fill="transparent" />
+				</svg>
+				<div class="trend-tip" hidden></div>
+			</div>
+		</section>
+
+		<section class="bar-lists">
+			{barLists.map((list) => {
+				const max = Math.max(1, ...list.items.map((i) => i.value));
+				return (
+					<div class="card">
+						<h2>
+							{list.title} <span class="unit">by {list.unit}</span>
+						</h2>
+						<ol>
+							{list.items.map((item) => (
+								<li>
+									<div class="bar-row">
+										<span class="bar-name">
+											{item.tag && <span class="type-tag">{item.tag}</span>}
+											{item.href ? <a href={item.href}>{item.name}</a> : <span class="capitalize">{item.name}</span>}
+										</span>
+										<span class="num">{whole.format(item.value)}</span>
+									</div>
+									<div class="bar-track"><div class="bar" style={`width: ${(item.value / max) * 100}%`}></div></div>
+								</li>
+							))}
+						</ol>
+					</div>
+				);
+			})}
+		</section>
+
+		<section class="card">
+			<h2>All pages</h2>
+			<div class="table-scroll">
+				<table>
+					<thead>
+						<tr>
+							<th>Page</th>
+							<th>Type</th>
+							<th class="num">Views</th>
+							<th class="num">Users</th>
+							<th class="num">Avg engagement</th>
+							<th class="num">Bounce rate</th>
+						</tr>
+					</thead>
+					<tbody>
+						{pageRows.map((p) => (
+							<tr>
+								<td>
+									{isSitePath(p.path) ? <a href={p.path}>{p.title}</a> : p.title}
+									{p.title !== p.path && <span class="path">{p.path}</span>}
+								</td>
+								<td>{p.type}</td>
+								<td class="num">{whole.format(p.views)}</td>
+								<td class="num">{whole.format(p.users)}</td>
+								<td class="num">{duration(p.engagementSeconds)}</td>
+								<td class="num">{percent(p.bounceRate)}</td>
+							</tr>
+						))}
+					</tbody>
+				</table>
+			</div>
+		</section>
+	</div>
+</Base>
+
+<style>
+	.analytics {
+		--series-1: var(--accent);
+		display: grid;
+		gap: 1.5rem;
+	}
+	.analytics-header {
+		display: flex;
+		flex-wrap: wrap;
+		align-items: flex-end;
+		justify-content: space-between;
+		gap: 1rem;
+	}
+	.analytics-header h1 {
+		margin: 0;
+	}
+	.analytics-range {
+		margin: 0.25rem 0 0;
+		color: var(--ink-soft);
+	}
+	.analytics-badge {
+		padding: 0.25rem 0.75rem;
+		border-radius: 999px;
+		background: #fdf0d5;
+		color: #7a4b00;
+		font-size: 0.875rem;
+		font-weight: 600;
+	}
+	.card {
+		padding: 1.25rem;
+		border: 1px solid var(--line);
+		border-radius: var(--radius);
+		background: var(--card);
+		min-width: 0;
+	}
+	.card h2 {
+		font-size: 1.25rem;
+		margin-bottom: 0.75rem;
+	}
+	.unit {
+		font-family: inherit;
+		font-size: 0.875rem;
+		font-weight: 400;
+		color: var(--ink-soft);
+	}
+	.tiles {
+		display: grid;
+		grid-template-columns: repeat(2, minmax(0, 1fr));
+		gap: 1rem;
+	}
+	.tile-label {
+		margin: 0;
+		font-size: 0.875rem;
+		color: var(--ink-soft);
+	}
+	.tile-value {
+		margin: 0.25rem 0 0;
+		font-size: 2rem;
+		font-weight: 600;
+		line-height: 1.2;
+		font-variant-numeric: tabular-nums;
+	}
+	.bar-lists {
+		display: grid;
+		gap: 1rem;
+	}
+	@media (min-width: 60rem) {
+		.tiles {
+			grid-template-columns: repeat(4, minmax(0, 1fr));
+		}
+		.bar-lists {
+			grid-template-columns: repeat(2, minmax(0, 1fr));
+		}
+	}
+	ol {
+		list-style: none;
+		margin: 0;
+		padding: 0;
+		display: grid;
+		gap: 0.6rem;
+	}
+	.bar-row {
+		display: flex;
+		justify-content: space-between;
+		gap: 0.75rem;
+		font-size: 0.875rem;
+	}
+	.bar-name {
+		display: flex;
+		align-items: baseline;
+		gap: 0.5rem;
+		min-width: 0;
+		white-space: nowrap;
+		overflow: hidden;
+		text-overflow: ellipsis;
+	}
+	.bar-name a,
+	td a {
+		text-underline-offset: 2px;
+		text-decoration-color: var(--line);
+	}
+	.capitalize {
+		text-transform: capitalize;
+	}
+	.type-tag {
+		flex: none;
+		padding: 0 0.4rem;
+		border-radius: 4px;
+		background: var(--paper);
+		color: var(--ink-soft);
+		font-size: 0.75rem;
+	}
+	.num {
+		font-variant-numeric: tabular-nums;
+		color: var(--ink-soft);
+		text-align: right;
+	}
+	.bar-track {
+		height: 6px;
+		margin-top: 0.25rem;
+		border-radius: 4px;
+		background: var(--paper);
+	}
+	.bar {
+		height: 100%;
+		border-radius: 4px;
+		background: var(--series-1);
+	}
+	.trend {
+		position: relative;
+	}
+	.trend svg {
+		display: block;
+		width: 100%;
+		height: auto;
+		touch-action: none;
+		outline: none;
+	}
+	.grid-line {
+		stroke: var(--line);
+		stroke-width: 1;
+	}
+	.axis-label {
+		fill: var(--ink-soft);
+		font-size: 12px;
+	}
+	.series-line {
+		fill: none;
+		stroke: var(--series-1);
+		stroke-width: 2;
+		stroke-linejoin: round;
+	}
+	.series-area {
+		fill: var(--series-1);
+		opacity: 0.1;
+	}
+	.crosshair {
+		stroke: var(--ink-soft);
+		stroke-width: 1;
+	}
+	.crosshair-dot {
+		fill: var(--series-1);
+		stroke: var(--card);
+		stroke-width: 2;
+	}
+	.trend-tip {
+		position: absolute;
+		top: 0;
+		pointer-events: none;
+		transform: translateX(-50%);
+		background: var(--ink);
+		color: var(--paper);
+		border-radius: 6px;
+		padding: 4px 8px;
+		font-size: 12px;
+		white-space: nowrap;
+	}
+	.trend-tip :global(strong) {
+		font-size: 14px;
+	}
+	.table-scroll {
+		overflow-x: auto;
+	}
+	table {
+		width: 100%;
+		border-collapse: collapse;
+		font-size: 0.875rem;
+	}
+	th {
+		font-weight: 600;
+		color: var(--ink-soft);
+		text-align: left;
+	}
+	th,
+	td {
+		padding: 0.5rem 1rem 0.5rem 0;
+		border-bottom: 1px solid var(--line);
+		vertical-align: top;
+	}
+	th:last-child,
+	td:last-child {
+		padding-right: 0;
+	}
+	.path {
+		display: block;
+		color: var(--ink-soft);
+		font-size: 0.75rem;
+	}
+</style>
+
+<script>
+	for (const root of document.querySelectorAll<HTMLElement>('.trend')) {
+		const points: [string, number][] = JSON.parse(root.dataset.points ?? '[]');
+		const svg = root.querySelector('svg')!;
+		const hit = svg.querySelector<SVGRectElement>('.hit')!;
+		const line = svg.querySelector<SVGLineElement>('.crosshair')!;
+		const dot = svg.querySelector<SVGCircleElement>('.crosshair-dot')!;
+		const tip = root.querySelector<HTMLElement>('.trend-tip')!;
+		const pathEl = svg.querySelector<SVGPathElement>('.series-line')!;
+		const coords = (pathEl.getAttribute('d') ?? '')
+			.split(/[ML]/)
+			.filter(Boolean)
+			.map((pair) => pair.split(',').map(Number));
+		let index = -1;
+
+		const show = (i: number) => {
+			index = Math.max(0, Math.min(points.length - 1, i));
+			const [cx, cy] = coords[index];
+			line.setAttribute('x1', String(cx));
+			line.setAttribute('x2', String(cx));
+			dot.setAttribute('cx', String(cx));
+			dot.setAttribute('cy', String(cy));
+			line.setAttribute('visibility', 'visible');
+			dot.setAttribute('visibility', 'visible');
+			const [label, value] = points[index];
+			tip.replaceChildren();
+			const strong = document.createElement('strong');
+			strong.textContent = value.toLocaleString('en');
+			tip.append(strong, document.createTextNode(` views · ${label}`));
+			tip.style.left = `${(cx / svg.viewBox.baseVal.width) * 100}%`;
+			tip.hidden = false;
+		};
+		const hide = () => {
+			line.setAttribute('visibility', 'hidden');
+			dot.setAttribute('visibility', 'hidden');
+			tip.hidden = true;
+		};
+
+		hit.addEventListener('pointermove', (event) => {
+			const box = hit.getBoundingClientRect();
+			const ratio = (event.clientX - box.left) / box.width;
+			show(Math.round(ratio * (points.length - 1)));
+		});
+		hit.addEventListener('pointerleave', hide);
+		svg.addEventListener('blur', hide);
+		svg.addEventListener('keydown', (event) => {
+			if (event.key === 'ArrowRight') show(index + 1);
+			else if (event.key === 'ArrowLeft') show(index < 0 ? points.length - 1 : index - 1);
+		});
+	}
+</script>
